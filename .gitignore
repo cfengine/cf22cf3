@@ -1,0 +1,30 @@
+# vim
+*~
+.*.swp
+.*.swo
+
+# emacs
+
+*~
+\#*#
+.dir-locals.el
+
+# eclipse
+
+.cproject
+.project
+.settings
+
+# qt-creator
+
+core.config
+core.creator
+core.creator.user
+core.files
+core.includes
+*.autosave
+
+# Mac Finder
+
+.DS_Store
+
