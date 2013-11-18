@@ -1,0 +1,37 @@
+
+Version 1 of the cfd protocol:
+
+
+--------------------------------------------------
+
+(CAUTH XXX.YYY.ZZZ.MMM fqname uqname signature)
+
+---------------------------------------------------
+
+buffer1 = (SYNC <time()> STAT filename)
+
+(SSYNC buflen)(buffer1)
+<-secoffset-> <--len-->
+
+---------------------------------------------------
+
+(OPENDIR filename)
+
+---------------------------------------------------
+
+buffer2 = (MD5 filename byte1 byte2 ...byte16)
+
+(SMD5 buflen)(buffer2)
+<-secoffset-> <--len-->
+---------------------------------------------------
+
+buffer3 = (GET sessionkey filename)
+
+(SGET buflen blocksize buffer3)
+
+---------------------------------------------------
+
+All transfers are made in 4096 byte buffer units, or
+blocksize units in GET (usually 512k).
+
+Encryption is based on symmetric shared keys.

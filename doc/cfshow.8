@@ -1,0 +1,63 @@
+.TH cfengine 8 "Maintenance Commands" HiOslo
+.SH NAME
+cfshow \- Dump cfengine databases
+.SH SYNOPSIS
+
+/usr/local/sbin/cfshow [options] 
+
+.SH DESCRIPTION
+.B cfengine
+is a language based system specifically designed
+for testing and configuring unix\-like systems attached to
+a TCP/IP network. 
+
+.PP
+cfshow is a tool for showing the contents of the internal databases
+used by cfengine in its operation. Many users will not care about these
+internal details, while cfengine manages the system transparently. More advanced
+users might desire a simple way to dump the contents of these databases
+to text, for reporting purposes. HTML and XML versions of the output are
+provided for easy integration with reporting.
+
+.SH EXAMPLES
+
+cfshow --locks
+cfshow --last-seen
+cfshow --checksum
+cfshow --active
+cfshow --audit
+cfshow --classes
+cfshow --regex
+
+.PP
+These show the named databases.
+
+.SH OPTIONS
+
+Here are all of the options supported:
+
+--help                    (-h)
+--debug                   (-d)
+--verbose                 (-v)
+--locks                   (-l)
+--last-seen               (-s)
+--performance             (-p)
+--checksum                (-c)
+--classes                 (-C)
+--filename                (-f)
+--regex                   (-r)
+--active                  (-a)
+--version                 (-V)
+--html                    (-H)
+--xml                     (-X)
+--purge                   (-P)
+--audit                   (-A)
+
+.SH FILES
+cfshow reads cfengine internal information that is normally stored in the Work Directory /var/cfengine.
+
+.SH AUTHOR
+Mark Burgess, Oslo University College
+.SH INFORMATION
+http://www.cfengine.org
+

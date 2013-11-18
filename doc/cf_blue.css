@@ -1,0 +1,61 @@
+BODY {
+     font-family: Verdana, Arial, Helvetica, sans-serif;
+     font-style: normal;
+     font-size: 11pt;
+     background: #FFFFFF;
+     color: #000000;
+     }
+        
+P { 
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  }
+
+FONT.liten {font-size: 70%; }
+
+H1, H2, H3 {
+        font-weight: normal;
+        color: #2c2e70;
+        margin-bottom: 0em;
+        }
+
+TABLE { vertical-align: top; } 
+
+H1 { font-size: 140% }
+H2 { font-size: 120% }
+H3 { font-size: 110% }
+H4 { font-style: italic; }
+
+TD, TH, UL {
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-style: normal;
+        }
+
+TH { background: #9999FF;
+     font-family: Verdana, Arial, Helvetica, sans-serif;
+     color: blue;
+  font-size: 10pt;
+   }
+
+TD { color: #000000;
+     font-family: Verdana, Arial, Helvetica, sans-serif;
+     font-size: 10pt;
+   }
+
+PRE { font-family: "Lucida Typewriter", "Courier", monotype;
+      font-style: normal;
+     font-size: 11pt;
+background-color: #eee;
+    }
+ 
+.tynn {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: smaller;
+        font-style: normal;
+        font-weight: lighter;
+        margin-bottom: 0em;
+     font-size: 11pt;
+        }
+
+A:link { color: #2c2e70 }
+A:visited { color: black }
+A:active { color: #600041 }

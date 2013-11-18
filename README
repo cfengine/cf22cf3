@@ -1,0 +1,65 @@
+-*- text -*-
+
+CFENGINE version 2
+-------------------
+
+Cfengine is a suite of programs for setting up and maintaining BSD and
+System-5-like operating system optionally attached to a TCP/IP
+network.  You can think of cfengine as a very high level language and
+a self-learning software agent---much higher level than Perl or shell:
+a single statement can result in many hundreds of operations being
+performed on multiple hosts. Cfengine is good at performing a lot of
+common system administration tasks, and allows you to build on its
+strengths with your own scripts. You can also use it as a netwide
+front-end for cron.
+
+The main purpose of cfengine is to allow you to create a single,
+central system configuration which will define how every host on your
+network should be configured in an intuitive way.  An
+interpreter/agent runs on every host on your network and parses the
+master file (or file-set); the configuration of each host is checked
+against this file and then, if you request it, any deviations from the
+defined configuration are fixed automatically.  You do not have to
+mention every host specifically by name in order to configure them :
+instead you can refer to the properties which distinguish hosts from
+one another.  Cfengine uses a flexible system of ``classes'' which
+helps you to single out a specific group of hosts with a single
+statement.
+
+New features in cfengine 2:
+
+* Program restructuring and rationalization.
+* All network connections are now mutually authenticated by 
+  public/private key methods, regardless of whether encryption
+  is used to make communication private.
+* Improved network transfer efficiency.
+* Automated anomaly detection.
+* Improved reporting and scheduling mechanisms, based on recent
+  research.
+
+Cfengine is written mainly by Mark Burgess at Oslo University College
+in Norway.
+
+Bug reports to bug-cfengine@gnu.org   (News: gnu.cfengine.bug)
+General help to help-cfengine@gnu.org (News: gnu.cfengine.help)
+
+Official web site is at http://www.cfengine.org at Oslo University College.
+
+INSTALLATION
+------------
+
+To compile this program, you simply follow the standard GNU configure
+rules.  At its simpleist, to build and install CFEngine in /usr/local,
+this would be:
+
+configure
+make
+make install
+
+Please read the detailed information at http://www.cfengine.org
+
+Users with mixed solaris/sparc mileux and new gcc, will need
+to compile on older machines with CFLAGS="-g -O2 -mv8"
+
+MB 2002
+

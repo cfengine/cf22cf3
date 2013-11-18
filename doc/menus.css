@@ -1,0 +1,14 @@
+h1, h2, a, table.list th
+{
+    color: #1f6e6b;
+}
+
+
+
+table.border
+{ 
+  border-color: #4e8b8c;
+  border-style: solid;
+  border-width: 1px;
+}
+

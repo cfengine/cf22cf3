@@ -1,0 +1,177 @@
+=head1 NAME
+
+cfetool update - Update the database with a new value
+
+=head1 SYNOPSIS
+
+B<cfetool> B<update> I<name>
+S<B<--value>|B<-V> I<value>>
+S<[B<--path>|B<-p> I<directory name>]>
+S<[B<--time>|B<-t> I<seconds>]>
+S<[B<--daily>|B<-d>]>
+S<[B<--weekly>|B<-w>]>
+S<[B<--yearly>|B<-y>]>
+S<[B<--cfenvd>|B<-c>]>
+S<[B<--histograms>|B<-H>]>
+S<[B<--verbose>|B<-v>]>
+S<[B<--debug>|B<-D>]>
+S<[B<--debugging>|B<-E>]>
+S<[B<--debugging2>|B<-Y>]>
+S<[B<--help>|B<-h>]>
+
+=head1 DESCRIPTION
+
+Takes a new value and uses it to update the database specified by I<name>,
+located at the path specified by the B<-p> argument, or the current working
+directory if the B<-p> argument is ommitted. The value will be associated with
+the current time, unless the B<-t> option is given. In order for cfetool to
+function properly, this command should be issued at least once during each
+interval specified by the B<--step> option of C<cfetool create>.
+
+The B<-d>, B<-w> and B<-y> options specify the databases to update. If all
+three options are omitted, only the weekly database will be updated.  
+
+=head1 OPTIONS
+
+=over
+
+=item B<--value>|B<-v> I<value>
+
+Specifies a new value to update the database with.
+
+=item B<--path>|B<-p> I<directory name>
+
+The directory in which the database specified by I<name> can be found.
+
+=item B<--time>|B<-t>
+
+The time the value was collected, in seconds since epoch (January 1st, 1970).
+If this argument is omitted, the current time will be used.
+
+=item B<--daily>|B<-d>
+
+Update the daily averages database. 
+
+=item B<--weekly>|B<-w>
+
+Update the weekly averages database.
+
+=item B<--yearly>|B<-y>
+
+Update the yearly averages database.
+
+=item B<--cfenvd>|B<-c>
+
+Communicate with cfengine. If this option is specified, cfetool will define
+classes understandable by cfagent. For more information, refer to the
+documentation for B<cfenvd>.
+
+=item B<--histograms>|B<-H>
+
+Collect histogram information about the probability distribiution of
+fluctuations about the mean value over all times of day. Cfetool won't
+write anything to this file for the first four weeks, as it has to have
+reliable mean values in order to accurately calculate it.
+
+=item B<--verbose>|B<-v>
+
+Print details of the command's execution to the standard output stream.
+
+=item B<--debug>|B<-D>
+
+Print even more details of the command's execution to the standard output
+stream.
+
+=item B<--debugging>|B<-E>
+
+More debugging output.
+
+=item B<--debugging2>|B<-Y>
+
+Even more debugging output.
+
+=item B<--help>|B<-h>
+
+Print a short help message and then exit.
+
+=back
+
+=head1 OUTPUT
+
+Before exiting, C<cfetool update> will print one line to the standard output
+stream in the following format:
+
+yrly=I<ynum>,wkly=I<wnum>,dly=I<dnum>
+
+I<ynum>, I<wnum> and I<dnum> will be either the number 0 if the corresponding
+database was not updated, or a code indicating the state of the given statistic,
+as compared to an average of equivalent earlier times, as specified below:
+
+ code    high|low|normal   meaning
+ -------------------------------------------------------------
+  -2     -                 no sigma variation
+ -------------------------------------------------------------
+  -4     low               within noise threshold, and within
+  -5     normal              2 standard deviations from
+  -6     high                expected value
+ -------------------------------------------------------------
+ -14     low               microanomaly: within noise
+ -15     normal              threshold, but 2 or more standard
+ -16     high                deviations from expected value
+ -------------------------------------------------------------
+ -24     low               normal; within 1 standard deviation
+ -25     normal              from the expected value
+ -26     high                
+ -------------------------------------------------------------
+ -34     low               dev1; more than 1 standard 
+ -35     normal              deviation from the expected
+ -36     high                value
+ ------------------------------------------------------------
+ -44     low               dev2; more than 2 standard
+ -45     normal              deviations from the expected
+ -46     high                value
+ -------------------------------------------------------------
+ -54     low               anomaly; more than 3 standard
+ -55     normal              deviations from the expected
+ -56     high                value
+
+Where "low" indicates that the current value is below both the expected value
+for the current time position, and the global average value. "high" indicates
+that the current value is above those values. "normal" indicates that the
+current value is within the range of expected values.
+
+C<cfetool update> also exits with a code corresponding to the above table. If
+more than one database is being updated, the most negative result from the
+updates is returned, and the individual results must be obtained from the
+standard output stream, as described above.
+
+=head1 EXAMPLE
+
+  % cfetool update temperature --path /my/path --value 14.5 --histograms
+  yrly=0,wkly=-6,dly=0
+
+Updates the weekly temperature database and histogram files located in
+B</my/path/> with the value 14.5 using the current time as the update time. The
+output indicates that only a weekly database was updated, and the new value
+given was within cfetool's noise threshold, and also within 2 standard
+deviations of the previous average stored in the database.
+
+=head1 AUTHORS
+
+The code and documentation were contributed by Stanford Linear Accelerator
+Center, a department of Stanford University.
+This documentation was written by
+
+=over
+
+=item Elizabeth Cassell <e_a_c@mailsnare.net> and
+
+=item Alf Wachsmann <alfw@slac.stanford.edu>
+
+=back
+
+=head1 COPYRIGHT AND DISCLAIMER
+
+ Copyright 2004 Alf Wachsmann <alfw@slac.stanford.edu> and
+                Elizabeth Cassell <e_a_c@mailsnare.net>
+ All rights reserved.

@@ -1,0 +1,147 @@
+.TH cfengine 8 "Maintenance Commands" HiOslo
+.SH NAME
+cfengine \- network configuration engine
+.SH SYNOPSIS
+/usr/local/sbin/cfagent [options]
+.PP
+/usr/local/sbin/cfrun [options] 
+.PP
+/usr/local/sbin/cfservd
+.PP
+/usr/local/sbin/cfexecd
+.PP
+/usr/local/sbin/cfenvd
+.PP
+/usr/local/sbin/cfkey
+.PP
+/usr/local/sbin/cfenvgraph
+
+.SH DESCRIPTION
+.B cfengine
+is a language based system specifically designed
+for testing and configuring unix\-like systems attached to
+a TCP/IP network. You can think of
+.B cfengine
+as a very high
+level language \-\- much higher level than Perl or shell. A
+single statement can result in many hundreds of links
+being created, or the permissions of many hundreds of
+files being set. The idea of 
+.B cfenginge
+is to create a
+single file or set of configuration files which will
+describe the setup of every host on your network.
+.PP
+.B cfagent
+runs on every host and parses one file (or file\-set),
+the configuration of the host is checked against this file
+and, if desired, any deviations are fixed.
+.B cfagent
+reads a configuration file called cfengine.conf in
+a directory pointed to by the environment variable CFINPUTS.
+.B cfagent
+performs host integrity and security checks as well
+as installing and repairing system configuration.
+.SH COMMAND LINE OPTIONS
+.IP "-a (--sysadm)" 25
+Print only the name of the system administrator then quit.
+.IP "-b (--force-net-copy)"
+Forces net copy even if remote server is localhost
+.IP "-c (--no-check-files)"
+Do not check access rights on file systems
+.IP "-C (--no-check-mounts)"
+Check mount points for consistency. If this option is set
+then directories which lie in the \*(rqmount point\*(lq area are
+checked to see whether there is anything mounted on them.
+.IP "-d (--debug)"
+Enable debugging output. (parsing \-d1,run, \-d2, lite \-d3)
+.IP "-D (--define)"
+Define a compound class symbol of the form alpha.beta.gamma.
+.IP "-e (--no-edits)"
+Suppress file editing.
+.IP "-E (--enforce-links)"
+Globally force links to be created where plain files or
+links already exist. You have to use this in
+interactive mode and answer a yes/no query before
+.B cfagent
+will run like this.
+.IP "-f (--file)"
+Parse filename after this switch. By default 
+.B cfagent
+looks for a file called cfengine.conf in the current directory.
+.IP "-h (--help )"
+Help information. Display version banner and options summary.
+.IP "-H (--no-hard-classes)"
+Prevents 
+.B cfagent
+from generating any internal class name
+information. Can be used for emulation purposes.
+.IP "-i (--no-ifconfig)"
+Do not attempt to configure the local area network interface.
+.IP "-I (--inform)"
+Switches on the inform output level, whereby 
+.B cfagent
+reports everything it changes..
+.IP "-k (--no-copy)"
+Do not copy/image any files.
+.IP "-K (--no-lock)"
+Ignore locks when running.
+.IP "-l (--traverse-links)"
+Normally 
+.B cfagent
+does not follow symbolic links when recursively
+parsing directories. This option will force it to do so.
+.IP "-L (--delete-stale-links)"
+Delete links which do not point to existing files (except in
+user home directories, which are not touched).
+.IP "-m (--no-mount)"
+Do not attempt to mount file systems or edit the filesystem table.
+.IP "-M (--no-modules)"
+Ignore modules in actionsequence.
+.IP "-n (--recon,--dry-run,--just-print)"
+No action. Only print what has to be done without actually doing it.
+.IP "-N (--negate,--undefine)"
+Cancel a set of classes, or undefine (set value to false) a
+compound class of the form alpha.beta.gamma.
+.IP "-p (--parse-only)"
+Parse file and then stop. Used for checking the syntax of a
+program.
+.IP "-q (--no-splay)"
+Switch off host splaying (sleeping).
+.IP "-s (--no-commands)"
+Do not execute scripts or shell commands.
+.IP "-S (--silent)"
+Silence run time warnings.
+.IP "-t (--no-tidy)"
+Do not tidy file systems.
+.IP "-u (--use-env)"
+Causes 
+.B cfagent
+to generate an environment variable CFALLCLASSES
+which can be read by child processes (scripts). This variable
+contains a summary of all the currently defined classes at any
+given time. This option causes some system 5 systems to generate
+a Bus Error or segmentation fault.
+.IP "-U (--underscore-classes)"
+When this option is set, 
+.B cfagent
+adds an underscore to the
+beginning of all hard system classes (like _sun4, _linux etc.)
+This can be used to avoid naming conflicts if you are so injudicious
+as to name a host by the name of a hard class. Other classes
+are not affected.
+.IP "-v (--verbose)"
+Verbose mode. Prints detailed information about actions and state.
+.IP "-V (--version)"
+Print only the version string and then quit.
+.IP "-x (--no-preconf)"
+Do not execute the cf.preconf net configuration file.
+.IP "-X (--no-links)"
+Do not execute the links section of a program.
+.IP "-w (--no-warn,--quiet)"
+Do not print warning messages.
+.SH AUTHOR
+Mark Burgess, Oslo University College
+.SH INFORMATION
+http://www.cfengine.org
+

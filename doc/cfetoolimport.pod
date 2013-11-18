@@ -1,0 +1,102 @@
+=head1 NAME
+
+cfetool import - import the contents of a database from XML format
+
+=head1 SYNOPSIS
+
+B<cfetool> B<import> I<name>
+S<B<--file>|B<-f> I<filename>>
+S<[B<--path>|B<-p> I<directory name>]>
+S<[B<--daily>|B<-d>]>
+S<[B<--weekly>|B<-w>]>
+S<[B<--yearly>|B<-y>]>
+S<[B<--verbose>|B<-v>]>
+S<[B<--debug>|B<-D>]>
+S<[B<--debugging>|B<-E>]>
+S<[B<--debugging2>|B<-Y>]>
+S<[B<--help>|B<-h>]>
+
+=head1 DESCRIPTION
+
+Creates a new database from it's XML representation, in the format created by
+B<rrdtool dump>.
+
+The B<-d>, B<-w>, and B<-y> options specify which databases to create and look
+for in the dump, and may be combined. If they are all ommitted, the default is
+to only import the weekly database.
+
+=head1 OPTIONS
+
+=over
+
+=item B<--file>|B<-f> I<filename>
+
+Specifies the XML file to restore.
+
+=item B<--path>|B<-p>
+
+The directory in which to create the new database folder. If this argument is
+not provided, the current working directory will be used.
+
+=item B<--daily>|B<-d>
+
+Create a database for recording daily patterns.
+
+=item B<--weekly>|B<-w>
+
+Create a database for recording weekly patterns.
+
+=item B<--yearly>|B<-y>
+
+Create a database for recording yearly patterns.
+
+=item B<--verbose>|B<-v>
+
+Print details of the command's execution to the standard output stream.
+
+=item B<--debug>|B<-D>
+
+Print even more details of the command's execution to the standard output
+stream.
+
+=item B<--debugging>|B<-E>
+
+More debugging output.
+
+=item B<--debugging2>|B<-Y>
+
+Even more debugging output.
+
+=item B<--help>|B<-h>
+
+Print a short help message and then exit.
+
+=back
+
+=head1 EXAMPLE
+
+  % cfetool import temperature_copy --path /my/path --file ./temperature.xml
+
+Create a new weekly database, C<temperature_copy>, in the C</my/path>
+directory, and import it's contents from the file C<temperature.xml> in the
+current working directory.
+
+=head1 AUTHORS
+
+The code and documentation were contributed by Stanford Linear Accelerator
+Center, a department of Stanford University.
+This documentation was written by
+
+=over
+
+=item Elizabeth Cassell <e_a_c@mailsnare.net> and
+
+=item Alf Wachsmann <alfw@slac.stanford.edu>
+
+=back
+
+=head1 COPYRIGHT AND DISCLAIMER
+
+ Copyright 2004 Alf Wachsmann <alfw@slac.stanford.edu> and
+                Elizabeth Cassell <e_a_c@mailsnare.net>
+ All rights reserved.

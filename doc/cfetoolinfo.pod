@@ -1,0 +1,99 @@
+=head1 NAME
+
+cfetool info - Get information about a database
+
+=head1 SYNOPSIS
+
+B<cfetool> B<info> I<name>
+S<[B<--path>|B<-p> I<directory name>]>
+S<[B<--daily>|B<-d>]>
+S<[B<--weekly>|B<-w>]>
+S<[B<--yearly>|B<-y>]>
+S<[B<--verbose>|B<-v>]>
+S<[B<--debug>|B<-D>]>
+S<[B<--debugging>|B<-E>]>
+S<[B<--debugging2>|B<-Y>]>
+S<[B<--help>|B<-h>]>
+
+=head1 DESCRIPTION
+
+Prints out some basic information about the specified database, including:
+the location of the database, the location of the histogram file (if there is
+one), the step interval, the database age, the time it was last updated, and
+the current overall average and variation.
+
+=head1 OPTIONS
+
+=over
+
+=item B<--path>|B<-p> I<directory name>
+
+The directory in which to find the database folder. If this argument is
+not provided, the current working directory will be assumed.
+
+=item B<--daily>|B<-d>
+
+Provide information about the daily averages database. 
+
+=item B<--weekly>|B<-w>
+
+Provide information about the weekly averages database.
+
+=item B<--yearly>|B<-y>
+
+Provide information about the yearly averages database.
+
+=item B<--verbose>|B<-v>
+
+Print details of the command's execution to the standard output stream.
+
+=item B<--debug>|B<-D>
+
+Print even more details of the command's execution to the standard output
+stream.
+
+=item B<--debugging>|B<-E>
+
+More debugging output.
+
+=item B<--debugging2>|B<-Y>
+
+Even more debugging output.
+
+=item B<--help>|B<-h>
+
+Prints a short help message and then exits.
+
+=back
+
+=head1 EXAMPLE
+
+  % cfetool info temperature --path /my/path
+
+ Weekly average database:
+ Database Location: /my/path/temperature/weekly.db
+ Histogram file: /my/path/temperature/weekly.hist
+ Step: 10 minutes
+ Database Age: 0.000992 weeks (1 steps)
+ Last update: Mon Sep 13 16:20:40 2004 (1095117640)
+ Current average: 7.105000, Var: 38.280217
+
+=head1 AUTHORS
+
+The code and documentation were contributed by Stanford Linear Accelerator
+Center, a department of Stanford University.
+This documentation was written by
+
+=over
+
+=item Elizabeth Cassell <e_a_c@mailsnare.net> and
+
+=item Alf Wachsmann <alfw@slac.stanford.edu>
+
+=back
+
+=head1 COPYRIGHT AND DISCLAIMER
+
+ Copyright 2004 Alf Wachsmann <alfw@slac.stanford.edu> and
+                Elizabeth Cassell <e_a_c@mailsnare.net>
+ All rights reserved.

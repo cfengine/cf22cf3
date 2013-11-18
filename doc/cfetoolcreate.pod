@@ -1,0 +1,121 @@
+=head1 NAME
+
+cfetool create - Set up a new Database
+
+=head1 SYNOPSIS
+
+B<cfetool> B<create> I<name>
+S<[B<--path>|B<-p> I<directory name>]>
+S<[B<--step>|B<-s> I<step>]>
+S<[B<--daily>|B<-d>]>
+S<[B<--weekly>|B<-w>]>
+S<[B<--yearly>|B<-y>]>
+S<[B<--cfenvd>|B<-c>]>
+S<[B<--histograms>|B<-H>]>
+S<[B<--file>|B<-f> I<filename>]>
+S<[B<--verbose>|B<-v>]>
+S<[B<--debug>|B<-D>]>
+S<[B<--help>|B<-h>]>
+
+=head1 DESCRIPTION
+
+Creates a new database and, optionally, histogram file in a new
+directory with the name given. If the B<-p> option is specified, it will be
+created as a subdirectory of the path given. Otherwise, it will be a 
+subdirectory of the current working directory.
+
+The B<-d>, B<-w>, and B<-y> options specify the period over which the data will
+span, and may be combined to create multiple databases. If they are all ommitted,
+the default is weekly.
+
+=head1 OPTIONS
+
+=over
+
+=item B<--path>|B<-p>
+
+The directory in which to create the new database folder. If this argument is
+not provided, the current working directory will be used.
+
+=item B<--step>|B<-s>
+
+The interval, in minutes, with which the database will be updated.
+If this argument is not provided, cfetool assumes a default of 5 minutes.
+
+=item B<--daily>|B<-d>
+
+Create a database for recording daily patterns.
+
+=item B<--weekly>|B<-w>
+
+Create a database for recording weekly patterns.
+
+=item B<--yearly>|B<-y>
+
+Create a database for recording yearly patterns.
+
+=item B<--cfenvd>|B<-c>
+
+Communicate with cfengine. If this option is specified, cfetool will set classes
+understandable by cfagent. For more information, see the B<cfenvd> documentation.
+
+=item B<--histograms>|B<-H>
+
+Create a histogram file, to store information about the probability
+distribiution of fluctuations about the mean value over all times of day.
+Cfetool won't write anything to this file for the first four weeks, as it
+has to have reliable mean values in order to accurately calculate it.
+
+=item B<--verbose>|B<-v>
+
+Print details of the command's execution to the standard output stream.
+
+=item B<--debug>|B<-D>
+
+Print even more details of the command's execution to the standard output
+stream.
+
+=item B<--file>|B<-f>
+
+Specifies a file which contains measurements to feed into the database in
+batch mode. Used for testing purposes. Each line in the file should be in
+either of these formats:
+
+I<month>/I<day>/I<year> I<hour>:I<min>:I<sec> I<value>
+
+or
+
+I<epoch> I<value>
+
+=item B<--help>|B<-h>
+
+Prints a short help message and then exits.
+
+=back
+
+=head1 EXAMPLE
+
+  % cfetool create temperature --path /my/path --histograms --step 10
+
+Creates an empty database and histogram file in B</my/path/temperature/>,
+ready to store values over ten minute intervals spanning a one-week period.
+
+=head1 AUTHORS
+
+The code and documentation were contributed by Stanford Linear Accelerator
+Center, a department of Stanford University.
+This documentation was written by
+
+=over
+
+=item Elizabeth Cassell <e_a_c@mailsnare.net> and
+
+=item Alf Wachsmann <alfw@slac.stanford.edu>
+
+=back
+
+=head1 COPYRIGHT AND DISCLAIMER
+
+ Copyright 2004 Alf Wachsmann <alfw@slac.stanford.edu> and
+                Elizabeth Cassell <e_a_c@mailsnare.net>
+ All rights reserved.

@@ -1,0 +1,29 @@
+.TH cfengine 8 "Maintenance Commands" HiOslo
+.SH NAME
+cfengine \- network configuration engine
+.SH SYNOPSIS
+/usr/local/sbin/cfexecd
+
+.SH DESCRIPTION
+.B cfengine
+is a language based system specifically designed
+for testing and configuring unix\-like systems attached to
+a TCP/IP network. Th cfexecd is a wrapper for local
+execution of cfagent. It may be used to capture cfagent output
+and send it as mail when run cron cron, e.g.
+
+.PP
+0,30 * * * * /var/cfengine/bin/cfexecd -F
+
+.PP
+or it can be run in daemon mode with scheduling parameters
+set in cfagent.conf. All control parameters are set in cfagent.conf.
+
+.IP "-F (--no-fork)"
+Run the executor in non-daemom (cron wrapper) mode.
+
+.SH AUTHOR
+Mark Burgess, Oslo University College
+.SH INFORMATION
+http://www.cfengine.org
+

@@ -1,0 +1,132 @@
+=head1 NAME
+
+cfetool dump - dump the contents of a database in XML format
+
+=head1 SYNOPSIS
+
+B<cfetool> B<dump> I<name>
+S<[B<--path>|B<-p> I<directory name>]>
+S<[B<--file>|B<-f> I<filename>]>
+S<[B<--daily>|B<-d>]>
+S<[B<--weekly>|B<-w>]>
+S<[B<--yearly>|B<-y>]>
+S<[B<--verbose>|B<-v>]>
+S<[B<--debug>|B<-D>]>
+S<[B<--debugging>|B<-E>]>
+S<[B<--debugging2>|B<-Y>]>
+S<[B<--help>|B<-h>]>
+
+=head1 DESCRIPTION
+
+Prints the contents of the specified database in XML format, with comments
+for human readability. This format can be read by B<cfetool import>.
+
+The B<-d>, B<-w>, and B<-y> options specify which databases to include in the
+dump, and may be combined. If they are all ommitted, the default is to only
+dump the weekly database.
+
+=head1 OPTIONS
+
+=over
+
+=item B<--path>|B<-p> I<directory name>
+
+Names the directory in which the database specified by I<name> can be found.
+
+=item B<--file>|B<-f> I<filename>
+
+Names a file to print the XML to. If this option is omitted, the XML will be
+printed to the standard output stream.
+
+=item B<--daily>|B<-d>
+
+Include the daily pattern database in the dump.
+
+=item B<--weekly>|B<-w>
+
+Include the weekly pattern database in the dump.
+
+=item B<--yearly>|B<-y>
+
+Include the yearly pattern database in the dump.
+
+=item B<--verbose>|B<-v>
+
+Print details of the command's execution to the standard output stream.
+When using this argument, it is recommended that you also provide the B<-f>
+argument, to avoid sharing the standard output stream.
+
+=item B<--debug>|B<-D>
+
+Print even more details of the command's execution to the standard output
+stream.
+
+=item B<--debugging>|B<-E>
+
+More debugging output.
+
+=item B<--debugging2>|B<-Y>
+
+Even more debugging output.
+
+=item B<--help>|B<-h>
+
+Print a short help message and then exit.
+
+=back
+
+=head1 EXAMPLE
+
+  % cfetool dump temperature --path /my/path -f temperature.xml
+
+Prints the following to the file B<temperature.xml>:
+
+ <!-- cfetool Database Dump -->
+ <dump>
+
+ 	<name> temperature </name>
+
+ 	<age> 1 </age> <!-- steps (0.001 weeks) -->
+
+ 	<step> 10 </step> <!-- minutes -->
+
+ 	<!-- consecutive updates -->
+ 	<iterations> 1 </iterations>
+
+ 	<!-- last update at Tue Aug 31 10:32:05 2004 -->
+ 	<timestamp> 1093973525 </timestamp>
+
+ 	<!-- current weighted average -->
+ 	<expect> 7.105000 </expect>
+
+ 	<!-- current variance -->
+ 	<var> 38.280217 </var>
+
+
+ <!-- data entries -->
+ 	<entry> <timekey> Tue:Hr10:Min30_40 </timekey>
+ 		<expect> 10.150000 </expect>
+ 		<var> 13.245750 </var>
+ 	</entry>
+
+ </dump>
+
+=head1 AUTHORS
+
+The code and documentation were contributed by Stanford Linear Accelerator
+Center, a department of Stanford University.
+This documentation was written by
+
+=over
+
+=item Elizabeth Cassell <e_a_c@mailsnare.net> and
+
+=item Alf Wachsmann <alfw@slac.stanford.edu>
+
+=back
+
+=head1 COPYRIGHT AND DISCLAIMER
+
+ Copyright 2004 Alf Wachsmann <alfw@slac.stanford.edu> and
+                Elizabeth Cassell <e_a_c@mailsnare.net>
+ All rights reserved.

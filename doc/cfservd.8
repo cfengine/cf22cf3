@@ -1,0 +1,28 @@
+.TH cfengine 8 "Maintenance Commands"
+.SH NAME
+cfservd \- cfengine server daemon
+.SH SYNOPSIS
+/usr/local/sbin/cfservd [options]
+
+.SH DESCRIPTION
+.B cfengine
+is a language based system specifically designed for testing and
+configuring unix\-like systems attached to a TCP/IP network. Cfservd
+is a file server and protective wrapper for starting cfengine
+remotely. It performs access control based on RSA authentication and
+IP address.
+.PP
+The daemon looks for a configuration file cfservd.conf by default.
+Cfservd gives little information when it fails to serve. This is by design.
+More information can be obtained using the debug option -d2 on both
+client and server ends.
+
+.IP "-d (--debug)"
+Enable debugging output. (parsing \-d1,run, \-d2, lite \-d3)
+.IP "-h (--help)"
+
+.SH AUTHOR
+Mark Burgess, Oslo University College
+.SH INFORMATION
+http://www.cfengine.org
+

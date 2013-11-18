@@ -1,0 +1,61 @@
+
+
+A method stanza
+
+  MethodName(args)
+
+  server=servername
+
+executed on a client "clientname" identifies clientname as a client
+and servername as a server. However these are logical relationships.
+In terms of client-server semantics, both hosts are peers.
+
+On each host there are directories:
+
+Directories rpc_in:  for incoming requests
+            rpc_out: public area for outgoing requests (must grant access in cfservd.conf)
+
+The rpc_out directory must be exported in cfservd by the client to the server host
+and vice versa, since this is the public directory.
+
+Each host that requests client service of another host (voluntary server) places a name-coded
+request in its own rpc_out ditrectory of the form
+
+   myip_serverthisisaimedat_methodname_MD5uniqueid
+
+Remote servers examine list of hosts that they check for cooperation (MethodPeers = (... )).
+These check to see if there are any files that match 
+
+Requesting client:
+
+  localhost method:
+
+    adds a file localhost_localhost_uniquechecksumID to LOCKDIR/rpc_in
+
+
+Behaviour of cfagent as remote server
+--------------------------------------
+
+Remote servers look for files on peer hosts of the form:
+
+  myip_*
+
+These are packages that are submitted by the peer host for execution by us.
+
+
+Behaviour of cfagent as client
+-------------------------------
+
+Client places files into rpc_in if they are destinted for localhost, or into
+rpc_out if they are destined for another host. The agent then checks for
+reply bundles in rpc_in. These are identified by their unique name that uses an MD5
+digest of the arguments.
+
+
+When a reply bundle is decoded variables of the form
+
+ $(methodname.variable)
+
+are set, and classes are also prefixed: 
+
+ methodname_class

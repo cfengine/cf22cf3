@@ -1,0 +1,56 @@
+.TH cfengine 8 "Maintenance Commands"
+.SH NAME
+cfrun \- Execute remote cfagents
+.SH SYNOPSIS
+
+/usr/local/sbin/cfrun [options] 
+
+.SH DESCRIPTION
+.B cfengine
+is a language based system specifically designed
+for testing and configuring unix\-like systems attached to
+a TCP/IP network. 
+
+.PP
+cfrun is a tool for executing one or more remote agents; it
+contacts the cfservd daemon running on a remote host, which (in turn)
+starts an authorized agent. Cfrun cannot be used to send instructions
+to a remote agent, but it can be used to flag certain aspects
+to the agent's existing policy for special attention.. 
+
+.PP
+The command line options for cfrun are slightly unusual. They are
+separated into three sections: options to the cfrun program, options
+to the remote cfagent (with some security restrictions) and finally
+classes or flags to the remote agent.
+
+.SH EXAMPLES
+
+cfrun specialhost1 specialhost2 -- --verbose -- \!solaris
+
+.PP
+In this example, we contact hosts specialhost1 specialhost2 by name, and ask them
+to execute cfagent with the --verbose flag, if the class solaris is not
+defined.
+.PP
+.PP
+cfrun specialhost1 --verbose  --  -- \!solaris
+
+.PP
+In this example the verbose flag is sent to cfrun rather than to the remote agent.
+No options are sent to the remote agents. The class specifier is sent to
+all the agents so that they may determine whether they fulfill the
+required class membership for execution.
+.PP
+The default behaviour is to execute cfagent serially on all hosts listed
+in the cfrun.hosts file.
+
+.SH FILES
+cfrun read a configuration file cfrun.hosts which must contain a list of every potentially
+contactable host.
+
+.SH AUTHOR
+Mark Burgess, Oslo University College
+.SH INFORMATION
+http://www.cfengine.org
+

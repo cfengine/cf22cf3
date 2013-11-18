@@ -1,0 +1,96 @@
+=head1 NAME
+
+cfetoolgraph - create graphs from a cfetool database
+
+=head1 SYNOPSIS
+
+B<cfetoolgraph> I<name>
+S<[B<--path>|B<-p> I<directory name>]>
+S<[B<--daily>|B<-d>]>
+S<[B<--weekly>|B<-w>]>
+S<[B<--yearly>|B<-y>]>
+S<[B<--timestamps>|B<-T>]>
+S<[B<--resolution>|B<-r>]>
+S<[B<--help>|B<-h>]>
+
+=head1 DESCRIPTION
+
+The cfetoolgraph command dumps graphs of averages for visual inspection of the
+normal state database. The files are in a format viewable by C<gnuplot> or
+C<xgmr> or other graphical plotting program.
+
+The command generates three or four files in a subdirectory of the database
+directory with a name beginning with either C<daily>, C<weekly> or C<yearly>,
+then C<->, then either C<snapshot> or the current time, if the B<-T> option is
+used.  The files are named C<average>, C<stddev>, and C<graph>. The C<graph>
+file contains both the averages and standard deviations, useful for plotting
+with error bars.
+
+If a histogram file is present, a fourth file named C<distr> will also be
+created, plotting the distribution of fluctuations about the mean value.
+
+If the B<-d>, B<-w> and B<-y> options are all omitted, the default is to only
+graph the weekly database.
+
+=head1 OPTIONS
+
+=over
+
+=item B<--path>|B<-p> I<directory name>
+
+The directory in which the database specified by I<name> can be found.
+
+=item B<--daily>|B<-d>
+
+Graph the daily averages database. 
+
+=item B<--weekly>|B<-w>
+
+Graph the weekly averages database.
+
+=item B<--yearly>|B<-y>
+
+Graph the yearly averages database.
+
+=item B<--timestamps>|B<-T>
+
+Time-stamp the output filenames with the current time, in order to give a
+unique name.
+
+=item B<--resolution>|B<-r>
+
+Generate high resolution data (), instead of averaging data
+over periods of one hour to generate simpler and smoother graphs.
+
+=item B<--help>|B<-h>
+
+Prints a short help message and then exits.
+
+=back
+
+=head1 EXAMPLE
+
+  % cfetoolgraph temperature --path /my/path --resolution
+
+Create graph files of the weekly database in high resolution in the
+C</my/path/temperature/weekly-snapshot> directory.
+
+=head1 AUTHORS
+
+The code and documentation were contributed by Stanford Linear Accelerator
+Center, a department of Stanford University.
+This documentation was written by
+
+=over
+
+=item Elizabeth Cassell <e_a_c@mailsnare.net> and
+
+=item Alf Wachsmann <alfw@slac.stanford.edu>
+
+=back
+
+=head1 COPYRIGHT AND DISCLAIMER
+
+ Copyright 2004 Alf Wachsmann <alfw@slac.stanford.edu> and
+                Elizabeth Cassell <e_a_c@mailsnare.net>
+ All rights reserved.

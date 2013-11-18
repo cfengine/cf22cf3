@@ -1,0 +1,129 @@
+
+Version 2 of protocol
+---------------------
+
+The aim of the revised protocol is to increase efficiency, reliabilty
+and to make way for multiple encryption keys and methods.
+
+Efficiency: reduce number of bytes in transmissions
+            due to large fixed lenth buffer transfers.
+            It is expected to be able to achieve an approximately
+            4-fold increase of efficiency.
+
+            Also, checksum verification was required for "secure"
+            connections. This is now rescinded.
+
+Reliability: eliminate dependence on end markers in body of
+             data. A separate control channel is introduced
+             for each buffer indicating whether more
+             is expected.
+
+========================================================================
+
+NOTE : DES encryption algorithm requires that buffer sizes
+be particular by 8 divisible lengths, e.g. 512, 1024 bytes etc.
+Cannot decrypt random length messages.
+
+========================================================================
+
+CLIENT:--------------------------------------------
+
+OpenConnection
+
+ IdentifyForVerification
+ EstablishSessionKey
+ while (!done)
+   {
+   DoCommands
+   }
+
+CloseConnection
+
+
+SERVER:---------------------------------------------
+
+while(true)
+
+   {
+   GetConnection
+
+   VerifyConnection
+   EstablishSessionKey
+   while (recognized command)
+      {
+      DoCommands
+      }
+   CloseConnection
+   }
+
+-------------------------------------------------------
+
+
+Each buffer sent is now to be prepended by an 8byte sequence, forming
+a control channel:
+
+sprintf(8bytes,"%c %d",status,strlen(buffer));
+
+status = m - more expected
+         t - terminate at this buffer
+
+The maxmimum sizeof any buffer is to be "bufsize" (currently 4096bytes).
+
+-----------------------------------------------------------
+
+RSA authentication (as of 2.0.a17) is a MUTUAL AUTHENTICATION
+
+Client sends: CAUTH as normal opening 
+              SAUTH "(yes|no) (random challenge) (public key)"
+
+Server      : if yes - challenge was encrypted with server's pubkey (decrypt)
+              if no  - challenge is plain text
+
+               checks for existing key
+               if keys match - confirmation
+               if keys don't match, FAIL
+               if no key
+                - if trust mode, accept new key on trust STORE:(IPADDRESS,PUBKEY)
+                - not trust mode, FAIL
+
+               CLIENT id IS NOW ASSUMED BY SERVER
+
+               Server replies with md5 of challenge in plaintext
+             : Server generates random counter-challenge
+               encrypts with client's public key, SEND
+               if server's pubkey unknown (no), server also sends public key
+
+client       : check reply in case server has broken off
+               receive reply (md5 of decrypted challenge)
+                - if reply ok and sent encrypted (yes), server is AUTHENTICATED
+                  else server cannot be identified on this round
+                    - if trust mode, accept
+                    - not trust mode, break off with server
+
+               Receive counter-challenge from server
+               DECRYPT counter-challenge with private key
+               REPLIES with md5 of the challenge
+               if (no) Receive public key from server and store
+               Generate random blowfish key, encrypt for and send to server
+               Set for this connection, for use in encrypted connections
+
+server       : Check MD5 reponse from client. 
+               If ok - CLIENT HOST AUTHENTICATED BY SERVER
+                  not - reject client
+
+               Receive encrypted blowfish key
+               Decrypt and add to connection for use in encrypted tranfers
+
+               Authentication dialogue complete
+
+
+
+
+
+(Still don't know which user it was - privileged sockets don't help either, since
+anyone can be root on their own host these days)
+
+Only one key is allowed per host on the server, so as long as we occupy each slot
+with a root key, then it must be root. Or can transport they keys manually.
+
+

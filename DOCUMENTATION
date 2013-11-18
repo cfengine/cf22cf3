@@ -1,0 +1,21 @@
+#! /bin/sh
+
+set -x
+aclocal -I config
+libtoolize --force --copy
+autoheader
+automake --add-missing --copy
+autoconf
+
+$ ./bootstrap
++ aclocal -I config
++ libtoolize --force --copy
+Putting files in AC_CONFIG_AUX_DIR, config.
++ autoheader
++ automake --add-missing --copy
+automake: configure.in: installing config/install-sh
+automake: configure.in: installing config/mkinstalldirs
+automake: configure.in: installing config/missing
++ autoconf
+
+

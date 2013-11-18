@@ -1,0 +1,2314 @@
+2.2.10
+
+	Protocol fix, potential integer error in server decoding.
+
+2.2.9
+	
+2.2.8
+	
+        Patch for cfservd serving wrong data when link->copy
+
+	Checksum changes now trigger persistent class "checksum_alerts"
+	and log to WORKDIR/state/file_hash_event_history
+
+	Threading error fix for cfexecd
+
+	Windows compilation fixes. Note that windows users might have to move keys and files
+	from /home/user/.cfagent to /var/cfengine after the standardization of administrator
+	paths for windows where getuid != 0.
+	
+2.2.7
+	Memory leak in database access, affecting cfenvd
+	
+2.2.6
+
+	Xen detection
+	
+	Bug in popen - incorrect placement of conditional in setting groups added in 2.2.4.
+
+	Sensor code added for linux cfenvd. Ready for patches for other systems.
+	Cpu utilization and temperature measurement added for linux where available
+
+	Bug reported in installable-negated classes. Patch by jack/SiliconSlick
+
+	Bugfix for class defined by directories
+	
+2.2.5
+	No content changes since 2.2.4, just fixes a packaging error.
+	(Mark's Easter turkey)
+2.2.4p
+	Blunder in makefile change. Compilation error fixed.
+	
+2.2.4	
+	Build changes. libpub is now an installed library libcfpub.so/a
+	so that cfengine 3 can find it.
+
+	Documentation is no longer distributed in the tarball, since most
+	people will use the online version. Also, enhanced documentation is
+	now available for any user who registers (free) at cfengine.com.
+
+	compress=true option in tidy was missing from documentation, and
+	left uninitialized during purging leading to attempts to compress
+	files instead of deleting. 
+
+	Bugfix for empty strings in editfiles.
+
+	Links did not get removed with nolink=kill. Code changes apparently broken earlier.
+	Fixed.
+
+	rxdirs= added to files. Default is false. If set to true, cfengine will not
+	assume that x-bits should be set when r is set on directory permissions.
+
+	Group initialization to popen, so shellcommands groups are consistent with uid login id
+
+	Rpm fix for package removal.
+	
+2.2.3
+	Feedback release after 2.2.2 and LISA 07, minor tweaks and bug fixes
+
+	"Harmless features"
+	
+	IgnoreInterfaceRegex( "vm.*" ) added to control
+	function added for removing data from special interfaces from class data
+
+	Option checkroot=true/false added to copy directive. This switches
+	on/off the change in 2.2.2 about setting permissions on the
+	destination root when recursively copying files. Default is now
+	false.
+
+	Can escape colons in the strings now to avoid confusion with
+	expansion separator. 
+
+	cfenvgraph --erasehistory users,www_in etc will now set the
+	average and variance of learned cfenvd data to zero. The current
+	week's trace is not affected.
+
+	audit=true/false flag added to most actions
+	
+2.2.2
+	
+	The build procedure for cfengine changes in this version to
+	incorporate an intermediate library. The default behaviour is now
+	to build a static library which will be used by cfengine 3 and
+	other application interfaces. To build a shared library, use
+
+	--enable-shared=yes
+
+	NOTE to developers: if running from the compiled code you now need
+	to delete the files cfagent cfservd etc and recompile to see changes
+	appear in the code. This is due to the libtool build process.
+	
+	libtoolizing compilation process for migration to cfengine shared library
+	(this is to support mulitple interfaces in future, and cf 3)
+
+	--
+
+	XML and HTML output options added to equip the internal instrumentation 
+	with readable output in cfshow e.g.
+
+	   cfshow --performance --html > output.html
+	   firefox output.html
+
+	provides an easier summary and searchability in browser function
+
+	Instrumentation changed to use realtime functions where possible. Standard
+	unix timer is too insensitive to measure performance.
+
+	The beginning of an integrated auditing system has been added. See references
+	to AuditLog() in the code. This logs to a compressed database and can be extracted
+	in ascii, html, xml using cfshow, e.g. cfshow  --audit --html > output.html
+	Auditing is switched on by
+
+	control:
+	 cfinputs_version = ( 1.2.1 ) # record this version in log, e.g. cvs revision
+	 Auditing = true
+	
+	--
+
+	cfshow --classes 
+
+	also shows the relative frequencies of classes
+	that have occurred on the system and the last time these were
+	observed.
+
+	cfshow -f cfagent.conf --regex "lin.*"
+
+	displays all rules in the named file whose classes match the named
+	regular expression. Note that the class "any" is not automatically matched
+	and the search is based on the class text from the file. The output is not
+	related to which classes are currently defined, and it will not recognise
+	the history of classes implicit through class-restricted imported files.
+	
+	--
+	
+	SCLI interface modifications.
+
+	--
+	
+	Intermittency entropy code added to the copy instrumentation for
+	automatic host reliability measurements.
+
+	Special variable
+
+	   IgnoreFriendRegex = ( regex )
+
+	prevents last-seen warnings about hosts matching the named regex
+	
+	--
+	
+	UserExists("name") and GroupExists("name") functions added to builtin functions.
+
+	ClassMatch function added in classes/groups to match regular expressions of other classes
+
+	-- 
+	
+	Additional octet variables added on default IPv4 address, for convenience:
+	e.g.
+	   590  : ipv4_2[eth1]=192.168
+	   1895 : ipv4[eth1]=192.168.1.101
+	   2100 : ipv4_1[eth1]=192
+	   4049 : ipv4_3[eth1]=192.168.1
+	
+
+	Methods can now expand some list variables, one list only per argument set.
+	This is a limited compromise pending cfengine 3. A patch for expansion of
+	variables in the control part of a program in methods has also been added.
+
+	Bug fix and code simplication of variable expansion.
+
+	-----
+
+	tied variable expansion added. Allows method workaround for file dissemination
+	by name, e.g. copy from
+
+	host1.conf -> /dir/host1/file.conf
+        host2.conf -> /dir/host2/file.conf  e.g. for virtual or diskless machines
+	
+	-----
+
+	Major changes to package manager code by Jo Rhett. Variable expansion
+	fixed by Mark.
+
+	-----
+
+	Option "best" added to checksum= in files action, this allows cross checking
+	of the two best known hash algorithms for each file. Currently this is md5 and sha
+	due to limitations in OpenSSL libcrypto.
+
+	UnCommentToLineMatching regex added
+	
+2.2.1
+	scli: type section added. This is a special case of shellcommands, which
+	send commands to the special shell scli by Juergen Schoenwaelder for
+	communicating with snmp devices.
+
+	Code refactoring for package management.
+
+	Bug fixes for problems introduced in 2.2.0.
+
+	Copy directory would not set owner correctly on root
+	
+2.2.0
+	Apart from minor changes, this version is about structural internal
+	changes that ease the eventual confluence with cfengine 3 and the work
+	going on behind the scenes there. Every effort is being made to
+	make this change easy for users and existing installations. New features
+	will be introduced into 2.2.x gradually, and the new front-end will
+	eventually merge into this.
+
+	This version accompanies a new introduction to cfengine published as
+	a SAGE Short Topics book.
+
+	* Some changes
+
+	EMANICS extensions and reference testing for context sensitive
+	network navigation patterns using voluntary cooperation contracts.
+	
+	PrintFile("name") function added to alerts
+	
+	!! List expansion in editfiles actions. This is an important change 
+	because it can potentially affect existing configurations that contain
+	variables with a list separator in them. EditSplit is used for this.
+
+	elsdefine fixed in tidy
+	
+	processes with action=warn only install fix
+
+	ifelapsed/expireafter fixed in editfiles
+
+	Instrumentation of copy/shellcommands measuring time/averages
+	use cfshow --performance
+
+	background=true in shellcommands was not implemented! (Fixed)
+
+	SLES10 recognition
+	RedHat/Fedora further classes
+
+	SELinux support begun by Jeff Sheltren UCSB, who notes. 
+
+	> Currently, I have editfiles and copy working with selinux security
+	> contexts, although so far copy only has support for regular files; I
+	> haven't worked on links, etc. yet.
+	> Use --enable-selinux during compilation
+
+	Bug / misleading error message in ReadArray fixed
+
+	HostRange bug for numericals in hostname fixed by Steve Radar.
+	
+2.1.22 
+
+	IMPORTANT: cfshow output formatting changes
+	           database internal format changes
+
+	Rewritten the checksum subsystem to allow for future development
+	and improvements and tidied the fragile Berkeley DB code. Cfservd
+	no longer caches checksums, as this causes update issues. This could
+	lead to additional load.
+
+	The checksum code has been rewritten with a new database model, so all
+	old data will be rebuilt. The checksum database has been renamed.
+	
+	ChecksumDatabase variable is not longer used.
+
+	Package manager debian patch added to iterate over packages
+	under installation.
+	
+	Package manager for AIX code added, courtesy of Anthony Rassin
+
+	Package manager for Gentoo added, courtesy of Eric Searcy 
+	
+	ShowState(rootprocs), ShowState(otherprocs) added for
+	better process reporting
+
+	General code reorganization for better separation of concerns, looking
+	towards cfengine 3.
+
+	cfconvert removed. Change of future strategy for cfengine 3 migration.
+
+	Rationalization of internal instrumentation and better integration
+	with cfenvd.
+
+	Bug fixes to miscmounts. Editing was broken with respect to editfilesize variable.
+	Option processing for miscmounts was also broken.
+
+	Support for old Berkeley DB APIs abandoned.
+
+	Encryption level added for full encryption of opendir traffic.
+	Must set FullEncryption = ( true ) in control for compatability
+
+	server=none now signals noop in method execution and copy.
+
+        Varstring expansion bug for nested variables.
+	
+2.1.21
+
+	copy action now supports this $(this) variable which is made equal to the
+	current server. This allows separating files from multiple hosts when downloading.
+	
+	cfenvd LDT fixes
+
+	Bugs in PeerLeader/Group functions fixed.
+
+	Some buffer limits too small and hardcoded in item.c - fix
+	PH support removed from cfenvd during code rationalization - never used
+
+	Cfenvd code rationalization and channge in database format.
+	THe first time cfenvd runs, it will convert the database into the new format,
+	be aware that this could take some time as it is disk intensive.
+
+	Matt Shibla (ARM) ReturnsZeroShell function added.
+	Cfrun ignored port number, fix
+
+
+2.1.20
+	ipv6 structure compilation error for Tru64
+
+	Tested for compilation with latest Berkeley4.4-NC
+
+	New option in cfservd.conf "LogEncryptedTransfers" (true/false).
+	If true, any file that is granted access and is marked "encrypt=true"
+	will be logged in syslog. i.e. one can keep a record of sensitive
+	transfers.
+
+	Linkcopy fix in 2.1.19 broke copying of links that point
+	nowhere. Fixed.
+
+	Copy was missing from the multi-pass detection. Fixed
+
+	Patch to debian package management. (bastiaans@sara.nl) fixed -
+	debian package always returned eq/true without cmp/version
+	statement" (checking if a package is installed, regardless of
+	version, now works
+	
+	However the "Comparison result" is always "eq" (equal) somehow for
+	me... "
+
+	If you are experiencing problems with 2.1.19 please get 2.1.19a.
+	One of the changes in 2.1.19 has had bizarre side effects in links
+	and disks.
+	
+2.1.19 
+
+	cfagent will now exit and cease processing if any class in the defined
+	control list
+
+	 AbortClasses = ( class_name_1 class_name_2 ... )
+
+	The singlecopy feature has been rewritten after reports of it not
+	working, besides, the code was bizarre and the documentation was
+	even worse.
+
+	The autodefine code also patched and tested. In both these cases,
+	there are lists of *patterns* or wildcards. The code and docs now
+	agree
+
+	ExecResult now runs its command in -n mode
+	
+	Error parsing strings (esp shellcommands) that contain the $
+	symbol due to a bug in 2D-lists.
+	
+	VMWare ESX recognition.
+	
+	Bug in cfservd stat-mode on symbolic links not correctly
+	evaluated.  Bug in linktype=copy for copy fixed.
+	
+	Bug in array expansion fixed - would truncate string after expansion
+
+	Constant-cosmetics and length alterations. CF_SMALLBUF introduced,
+	and MAXHOSTNAMELEN used
+
+	PID file added for each daemin in WORKDIR == /var/cfengine
+	
+	Patch for function argument parsing
+	
+	Typo in docs. SelectPartitionGroup -> SelectPartitionNeighbours
+	
+	Inform=true support for packages
+	
+	HostRange bug - recoding not implemented properly from
+	2.1.16. Caused seg fault.
+
+	Joe Buehler's harmless patch to cfexecd to flag daemon and batch mode.
+	
+	Serious bug in binserver handling fixed. (Rarely used feature)
+	
+	home tidying did not set the "done flag" for multiple pass avoidance.
+	
+	Patches to setting unqualified and qualified names
+	
+	SuSE 10 detection patch
+
+	Minor error fixes discovered by Joe Buehler and his wonderful
+	software.
+	
+        Files is the "suspicious" list were marked "not sensible" so that
+	follow-up rules e.g. to delete them would not be triggered This is
+	now considered a confusion of roles. Suspicious files are no
+	longer skipped.
+
+	More memory leaks in cfservd
+
+	Compilation fix for non-IPv6 savvy machines
+	
+2.1.18
+	
+	
+	Error in FileExists() left over from 2.1.16 changes. Fixed
+
+	elsedefine was not defined if a copy was requested of a non-existent file. Fixed.
+	
+	HostnameKeys (dynamic keys for dhcp clients) fix for cfservd.
+	
+	Error in stat'ing links that point to non-existent files in
+	cfservd. Missing "else" caused this to be reported as an error in
+	remote file copy.
+
+	5 second timeout reduced to 10 in cfservd file change check.
+	
+	Error message returned by cfservd is non-specific and previously
+	said authentication denied, regardless of failure. The daemon now replies
+	"Unspecified refusal". Users should use -v or -d2 on both sides of a connection
+	to diagnose the true cause of failure,
+	
+	Segmentation fault when in verbose mode fixed - editfiles pointer.
+	
+	Error in parsing quotes and escaped quotes in functions.
+
+	Bug in implementation of tidy scheduling during dependent classes fixed.
+
+	BeginGroupIfLineMatch
+	BeginGroupIfMatch
+	BeginGroupIfLineContaining operations added
+
+	Function ExecShellResult similar to ExecResult, but a shell is used,
+
+	cfservd some additional memory reclamation during file updates, could cause memory leaks..
+	
+2.1.17
+
+		This is a minor bugfix release
+
+	
+	WARNING	- the handling of function arguments has been changed. You are recommended to
+	use normal C/Perl quoting of argument strings., e.g.
+
+	  result = ( ExecResult("/bin/sh -c \"${pf_cc} -V | head -1 | cut -d\  -f3\"") )
+
+	not
+
+  	  result = ( ExecResult(/bin/sh -c "${pf_cc} -V | head -1 | cut -d\  -f3") )
+	
+	IsWildItemIn now has reflexive check - some confusion in the code about whether
+	the needle or the haystack is the wildcard.
+	
+	Templating in editfiles. A new editfiles directive "ExpandVariables"
+	adds an "m4" like function to cfengine -- allowing predefined variable strings
+	to be expanded into text.
+	
+	Patch contributed to expansvariables: Davor Ocelic <docelic@mail.inet.hr>
+	
+	Alerts patch - some alerts not installed, if classes not defined.
+	
+	Patch for missing variable expansion after function
+	parameter rewrite in 2.1.16. Some functions were not fully ported.
+
+	vicf eliminated from distribution	
+
+	PrepModule environment fix
+
+	Compilation error C++ mixed into cfetool fix
+
+	Chdir to / when ascting as a daemon for cfservd, cfexecd etc
+
+2.1.16
+	Bugfix release
+
+	Moved method parameter setting to fix a bug where parameters would
+	be set too late to be used in the parser
+	
+	action=warn in copy required inform=true to work, fixed.
+	
+	Function arg expansion bug and improvement fix
+	
+	Include directive added to cfrun.hosts (Olivier Fauchon)
+	
+	MOUNT_RO name collision fix
+	
+	SEG fault fixed when signalling cfenvd
+
+	SkipIdentify partial fix
+	
+	Alf Wachsmann and Elizabeth Cassel's cfetool added, based on cfenvd.
+
+	"cfetool makes a standalone tool out of cfenvd that accepts arbitrary
+	periodic data. In addition, it has support for yearly periodic data.
+	It's function and the user interface is in many aspects like rrdtool's.
+	cfetoolgraph was added to work with the new features of cfetool.
+	It works basically like cfenvgraph."
+
+	
+	Bug fix for multipass evaluation when resolving dependencies.
+
+	Cfservd reread patch. Timeout on polling for linux,
+
+	Default route code now uses "route" command exclusively for portability.
+
+	EmailFrom patch to cfexecd / redundant code was paste error
+
+	Increase pass depth in evaluation of action sequence.
+
+	Skipident patch
+
+	Size increase for interface buffer list
+
+	HPUX,AIX ifconfig location fix
+
+	Methods documentation improved.
+
+	New control function for testing tcp services
+          var = ReadTCP(host,port,"send string",maxbytes)
+	
+2.1.15 
+
+	-f removal in cfservd patch
+
+	Segmentation fault in cfservd with RSA key exchange fixed.
+
+	Disk freespace alerting bug - did not agree with manual specification. Message
+	appears only in verbose. Fixed. 
+
+	Autodefine install patch.
+
+	Abspath in shellcommands was not parsed and acted on...
+
+	Warnall action was not respected in copy. Permissions were altered on destination file anyway.
+
+	cfcolon added to special symbols.
+
+2.1.14
+
+	Alerts processed now in update context.
+
+	More locking canonification fixes
+	
+	Exception for ReplaceALL convergence warning. Warning is not fatal
+	if the operation is inside an editgroup.
+
+	md5/sha1 message incorrect on new file found.
+
+       Fixup Makefile.am and doc/Makefile.am.  Docs are now installed
+       in the CFEngine "share" directory where they belong.
+
+	Directory iteration fixed. New: owner=LastNode sets the owner of 
+	the directory to the name of the last node in the dir name. This allows
+	the creation of homedirs.
+
+	CentOS support added.
+
+	Extra encryption stage added in C5 protocol. NOTE: This makes 2.1.14
+	cfagent clients unable to talk to older servers. (Upgrade servers
+	first, or at the same time.)
+
+	Class "no_default_route" is now defined if a default route is not previously
+	set, and a default route is defined for the current host.
+
+	Added class functions IsGreaterThan, IsLessThan for numerical or string comparisons
+
+	control:
+	
+  	 actionsequence = ( files )
+	
+	 a = ( 2.12 )
+ 	 b = ( 2.11 )	
+	
+	classes:
+
+	lt = ( LessThan(${a},${b}) )
+   	gt = ( GreaterThan(${a},${b}) )
+
+	alerts:
+
+	  lt:: "$(a) LESS THAN $(b)"
+	  gt:: "$(a) GREATER THAN $(b)"
+
+
+	Bugfix for cfshow -c options (Nathan Hruby)
+	
+2.1.13
+	Mistake in placement of update.conf runs fixed.
+
+	Alteration to lock hashing to avoid conflicts
+
+	Mandrake version type patch/repatched 
+
+	Error message in disable now
+	underlines move to respository where defined.
+
+	Locking patch to tidy. Did not release lock when tidying
+	recursively with subdirectory deletions. (Eric Sorensen).
+
+	Host range patched (again) (Bas VdV)
+
+2.1.12
+	cf.preconf can now cause an abort if the script prints out a string
+	containing the substring "cfengine-preconf-abort".
+	An exit code of 2 signals this failure
+
+	Cfrun bug in placement of workdir initialization. Would try to open
+	/inputs/cfrun.hosts instead of /var/cfengine/inputs/cfrun.hosts
+
+	Moved mutex locks in address purging, to see if it prevents some
+	segmentation faults.
+
+	In image.c:	
+	/*      if (TRAVLINKS || ip->linktype == 'n') */
+	Took out linktype reference. This appears to be erroneous.
+
+	Patch to tidy: "Guolin Cheng" <guolin@alexa.com>
+
+	Patch to -Q to prevent update.conf from being executed.
+
+	Patch to rationalize choice of port number for new getaddrinfo
+	interfaces. (ip.c)
+
+	small patch to allow the use of PCRE if it is compiled with
+	--with-pcre.  This is using the POSIX compatible API that PCRE provides,
+	so the change necessary is to use pcreposix.h instead of regex.h and to
+	link in pcreposix.so. cindy.marasco@pnl.gov)
+	
+2.1.11
+
+	SUPPORT FOR POSIX ACLS IN LINUX IS NOT AS STRAIGHTFORWARD AS
+	ORIGINALLY THOUGHT.  THE API DOES NOT MATCH EXISTING
+	IMPLEMENTATIONS AND SEEMS SIGNIFICANTLY MORE COMPLEX. IN THE
+	INTERESTS OF STABILITY THIS WILL HAVE TO BE DEFERRED TO A LATER
+	RELEASE.
+
+	Comma in function argument bug in FileExists etc, fixed
+	
+	Option -z (--schedule) now prints only the run schedule.  Option
+	-Q (--query) added to print values of variables defined in
+	configuration
+	 
+	  cfagent -Q sysadm,domain,site,ipaddress
+
+	in format  varname=value
+
+	New variables can be used in cfagent.conf for cfexecd control:
+	
+	  EmailFrom = ( )
+	  EmailTo   = ( )  - overrides sysadm if set
+
+	
+	White Box linux class recognition added
+
+
+	When setting classes or variables by function call, the function
+	evaluation is no longer performed if it is not in an active class.
+	
+	Cfexecd now calls cfagent with -D from_cfexecd to define the class
+	"from_cfexecd::" when run from the executor
+	
+	WarnIfFileMissing added to editfiles and default is not to warn
+	of non-existent files, except in inform/verbose modes.
+	
+	Check added for DefineInGroup, signals error if not in group
+	Added copy type "any" for any matching criteria, date/sum etc.
+
+	Respository variable was not expanded like a normal variable
+	
+	cfshow tool added for consulting the databases
+
+	Better autodetection of Berkeley DB in some distros of Linux (SuSE) - has anyone heard of "standards"?
+	Date format changed in cfexecd output files
+	Errors if remote copy is not encrypted when server demands encryption. (patch)
+	
+	Renaming of directories is now allowed if dest= is set specifically.
+	
+	Check added for variables defined in terms of undefined variables.
+	
+	Patch for solaris package manager added (Louis Erickson - wwonko@rdwarf.com)
+
+	file added as synonym til reg in filter
+	
+	Patch to HostRange (item.c) (rader@ginseng.hep.wisc.edu)
+	Internal variable determining WORKDIR for non-privileged users.
+
+	Various minor changes and cosmetics.
+	
+	Lock string must include server name in copy - added
+	Method reply bundles fixed to work correctly with ipv6 addresses
+
+	SIGPIPE and SIGCHLD added to signal handler (SIGCHILD ignored against posix, but
+	how the hell do you sort this out?)
+	srand -> srand48 typo in cfenvd
+
+	Multiple method reply variables were incorrectly separated.
+	Added options to disable LastSeen data recording feature.
+
+	fclose used instead of pclose when calling ifconfig - resulted in zombies
+	
+2.1.10
+
+	Persistent class protection added to returned remote vrpc calls to prevent
+	meaningless multiple replies.
+	
+	Change added to IPRange to avoid possible bootstrap problem with unconfigured resolver.
+	IP address setting was contingent on having DNS. Misplaced } fixed in nameinfo
+		
+	EmptyResolvConf removed only nameserver entries. Now removes everything.
+	
+	Due to an error in constructing 2.1.9 some of the advertised
+	changes below were not included. They are included in this version.
+	
+	Workaround error message for parser bug with nested variables.
+
+2.1.9
+
+	WORKDIR/state/allclasses file caches all class date during cfagent execution, just
+	like the $(allclasses) variable, but the file can grow much larger without
+	overflow.
+	
+	.cfengine -> .cfagent in non-root public keys (some missing conversions)
+	Expand buffer incorrectly zeroed out public name key causing empty keyname in RSA dialogue
+	Old style bind reverse lookup added to Hostname2IPAddress
+2.1.8 
+
+	Additional checks added to bolster server transaction security.
+	
+	Fix of bug in copy server variable list expansion (unexpanded variables) introduced in 2.1.7
+	Typo in locks fixed
+	Mutex deadlock fix in cfservd for systems with up to date POSIX implementations.
+	QNX class data added
+	Syslog facility patches to cfservd. (Leonardo Helman)
+	Fix to avoid recursive imports
+	Variables were not expanded in PrepModule
+	Symbolic links were not tidied
+	Missing initializations in links could dump core
+	Logging route switching  bug in disk/required fixed
+
+
+	Bugs in implementation of remote method protocol. Classes were not
+	transferred properly.
+
+	Bug in HostnameKeys for cfrun fixed.
+	
+2.1.7p1
+
+	Bug in resolv node introduced in 2.1.7. Ordering of
+	nameservers was reverse.
+	
+2.1.7
+
+        Mandrake Linux detect patch
+
+	Unbelievably no documentation about strategies ever found its way
+	into the manual!! Fixed.
+	Sorting of anomaly histogram data
+	Date patch for SMTP in cfexecd
+
+	Bugfix for TTime filters in ParseTTime() - submitted Bob B. Crosbie.
+	Trinity Centre for High Performance Computing,
+	
+        ReplaceFirst function to replace first occurrence of a string in line.
+
+	Umask saving patch in editfiles (Sergio Gelato)
+	
+	Patch for variable socket length structs (BSD)
+	
+        Apparent bug in local methods from recent change. Name localhost
+	would be converted into an address which would then fail to match hail.
+
+	Iteration over server= variable in copy added
+	Iteration over resolver variables added
+
+
+	Bug in class evaluation was introduced in 2.1.6 by a sorting
+	algorithm. Some classes would evaluate to false even though true.
+
+        Default route setting has been broken in linux for a long time.
+        A workaround has been added using the shellcommand /sbin/route
+
+	Bug in rmdirs in tidy - old type mismatch corrected. Might cause
+	cfengine to delete an empty root-search directory undesirably.
+
+	Some bizarre coding in the resolver section replaced. Could lead
+	to incomplete class data.
+
+	Added option SkipIdentify = ( true ) for avoiding DNS lookup in
+	client side authentication.
+
+	Bug in method evaluation if peers have inconsistent resolvers and
+	cannot agree on whether to use IPv6/v4.
+
+	ReadList() function added to control for reading an iterator
+	from a file
+	
+2.1.6
+
+	Patch for incorrect symbolic link resolution with ".." internals.
+	Would chop off a leading slash.
+	
+	Patches for alerts appearing twice. InitAction added in install.c
+	
+	--with-docs option added and default is to not build the docs
+
+	Change to df.c to avoid rounding errors in small blocks for linux
+
+	wait status patch for returnszero()
+	
+	dpkg debian package management support (Morten Werner)
+
+	tidy rmdirs=all did not remove top directory since v2.0.0. Fixed.
+	Problem was new method to aviod races can never reach this location,
+	so have to use absolute path for top dir.
+
+	DARWIN patches to cfservd.c/ip.c to fix definitions
+
+	Separate ExpandVarstring buffer-size with new expandsize value
+        This removes some spurious use of VBUFF scratch space. One bug
+        in tidy path expansion found here. Variables were not expanded.
+	
+2.1.5
+	KNOWN BUG in persistent state memory for tcpdump data - long ipv6
+	addresses can make a byte count > old for fewer incoming so it remembers
+	wrong snapshot
+
+	Double DeleteParser() fixed.
+
+	Code cosmetics:
+
+		Annoying tabs removed from sources
+		bzero -> memset explicitly
+		bcopy -> memcpy
+
+        Segmentation fault in list handling fixed (seldom occurrence)
+	
+2.1.4
+
+        "Bug" found in method recognition - only constant parameters allowed.
+        Time of day or relative hostames as parameters will not work
+
+	Mutexes around locking now.
+
+	
+	Variable expansion of server deferred in copy to allow dynamic server choice
+
+        Removed old dns lookup caching for ipv4 - means no prior check for existing hostnames,
+        but allows running with dynamical variables
+	
+	-q option added to cfexecd. If set it invokes cfagent with -q flag (--no-splay)
+	Rewritten function analysis for multiple arguments in assignments
+	ReadTable() and ReadArray() functions to read associative arrays from files
+	hpux class changed from 9000* to * in class matching. Assume old versions now dead
+
+
+	tcpdump interface for cfenvd
+	Attempt to detect ipv6 address from ifconfig on unix and add classes. Cannot yet bind to interface.
+	Make internal list representation of IP addresses.
+
+	Error in -f evaluation introduced in recent version fixed.
+
+	Bind to outgoing interface implemented for new getaddrinfo libs functions.
+ 	Same of fior cfservd 
+
+	   BindToInterface = ( )
+
+	editfiles additions:
+	
+        DeleteLinesContainingFileItems @var{filename}
+        DeleteLinesMatchingFileItems @var{filename}
+        DeleteLinesStartingFileItems @var{filename}
+        DeleteLinesNotContainingFileItems @var{filename}
+        DeleteLinesNotMatchingFileItems @var{filename}
+        DeleteLinesNotStartingFileItems @var{filename}
+	AppendIfNoSuchLinesFromFile @var{filename}
+
+	Special function added to alerts:
+
+   	   FriendStatus(hours)
+
+	shows hosts that have not reported in for hours.
+	
+2.1.3
+
+
+	Voluntary RPC remote methods implemented.
+	
+	Bug in ignore when doing file recursion fixed.
+	Wildcard match did not include plain files when expanding wildcards
+
+	Internal array representation added to expression evaluation
+	
+          $(array[key])  $(array[$(key)])
+
+        Arrays may be defined using the association function:
+
+	assoc_array = ( A(B,"is for bird") A(C,"is for cat") )
+	
+2.1.2
+
+	Various minor patches
+
+	singlecopy locking patch (Eric Sorenson)
+	Patches Iain Morgen (NASA)
+
+	cfexecd add From line to mail
+
+	RegCmp(regex,$listvar) function added to match classes
+
+	Documentation of iteration added to reference manual - was missing.
+	
+	Domain variable was overwritten in 2.1.0 when methods were initialized. Corrected.
+	Cfexecd #ifdefs not compatible with cygwin - rewritten workaround
+	Entropy measure anomaly classes
+
+	Comparator uninitialized in process matches, creating bogus outout with -d3
+	Chop function removes all trailing spaces.
+	interfaces now records ip addreses
+
+	Variables can override context using a dot notation:
+
+	  ${context.variable}  ${global.env_time}
+
+	Interface addresses on multiple interfaces:
+
+   	  ${global.ipv4[hme0]} 
+  	  ${global.ipv4[eth1]}
+
+	cfservd list handling bugs after user patch, plus enchanced iteration:
+        e.g. now make multiple rules in a sinlgle stanza
+	
+		control:
+
+		  Split = ( " " )
+		  hostlist = ( "10.10.10.1 10.10.10.2 10.10.10.3" )  
+		  dirs =  ( "bin etc lib" )
+		  base = ( /usr )
+
+		#########################################################
+
+		admit:
+
+		   $(base)/$(dirs)   $(hostlist)
+
+	results in:
+	
+		Path: /usr/bin (encrypt=0)
+		   Admit: 10.10.10.1 10.10.10.2 10.10.10.3 root=
+		Path: /usr/etc (encrypt=0)
+		   Admit: 10.10.10.1 10.10.10.2 10.10.10.3 root=
+		Path: /usr/lib (encrypt=0)
+		   Admit: 10.10.10.1 10.10.10.2 10.10.10.3 root=
+
+	
+	Allow modules during parsing to initialize classes etc.
+	
+	control:
+	
+            gotinit = ( PrepModule(startup1,"arg1 arg2...") )
+	
+       classes:	
+	
+             gotinit = ( PrepModule(startup2,"arg1 arg2"}) )
+
+	
+2.1.1
+	Permissions on explicitly mentioned links to files could result in file permission
+	being changed instead.
+
+	Error in permission evaluation for copied files fixed.
+	
+	Mac OSX finder patches added
+
+	ID classes rationalized into nameinfo.c
+
+	scanarrivals option to disks/required - for research.
+
+	Improved anomaly analysis.
+	
+	setting repository in cfservd.conf caused crash - fixed.
+
+	& is now a synonym for "." - the AND operator in class evaluation
+
+	! negation of functions in class assignments is now handled
+
+	New option noabspath=true for copy allows one to override the need for
+	a full path in certain situations, e.g. "export A=x; /dothis""
+
+	Redhat 9 class names patch JY.
+
+	Case insensitive domain matching
+	
+2.1.0
+
+	************************************************************************************
+	* * * * * * * * * * * * * * * ** * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+	Main addition to 2.1.0 is * methods *. Methods replace modules for most applications
+                                   =========
+	* * * * * * * * * * * * * * * ** * * * * * * * * * * * * * * * * * * * * * * * * * *	
+	************************************************************************************
+
+	Error in cfenvd update policy for huge anomalies. Could never learn large values.
+	
+	New parser did not pick up restart sequence in processes if not enclosed by quotes.
+	
+	Bug in AppendIfNoLineMatching - infinite loop is SetLine not set, fixed,
+	ExecProgram was incorrectly listed as Exec in filters. fixed
+
+	Minor alterations to cfenvd policy. Calculational details, and
+	persistent information now lasts up to 30 minutes.
+	
+        Patch for red hat enterprise server classes
+
+	New variable 
+
+	  HostnameKeys = ( true )
+
+	if this is set, public keys are stored as user-hostname rather than
+	user-ipaddress. This can be useful for dhcp hosts. However, there is
+	a potential loss of security during key-exchange
+	due to implicit reliance on DNS or asserted
+	identity.
+	
+	------------------------------------------------------------------------------
+	DeleteItemNotMatching added to editfiles
+	DeleteItemNotStarting added to editfiles
+	DeleteItemNotContaining added to editfiles
+	
+
+	SyslogFacility = ( ) new variable to alter syslog facility level.
+	Possible values:
+
+	LOG_USER, LOG_DAEMON, LOG_LOCAL0-4
+	
+	--------------------------------------------------------------------------------
+
+	Persistent state memory can be added through a system alert functions:
+
+	 SetState(name,ttl,policy)
+
+	Set a class that acts like a non-resettable timer. It is defined for exactly 10
+	minutes
+	
+          SetState("preserved_class",10,Preserve)
+
+	Set a class that acts as a resettable timer. It is defined for 10 minutes unless
+	the SetState call is called again to extend its lifetime.
+	
+          SetState(non_preserved_class,6,Reset)
+
+	Delete a persistent class.
+
+	Delete an existing class:
+	
+          UnsetState(myclass)
+
+	--------------------------------------------------------------------------------
+	
+	rename: is now a synonym for disable: and a new option dest= is added to
+	these so that you can formally rename a file with any destination, not just suffix ".cfdisabled"
+	(though this remains the default).
+
+	
+	Classes now allowed in group / classes definitions for consistency and ANDing of classes
+
+        Added to Alerts to send messages directly and silently to syslog
+
+	   SysLog(LOG_ERR,"Test syslog message")
+
+	--------------------------------------------------------------------------------
+	
+	b2
+
+	cfservd no longer does reverse DNS lookup on keys that do not have to
+	be trusted, i.e. existing keys whose identity has been confirmed.
+	
+	Strategy evaluation was performed too late, so that it could not be
+	used to define variables. Fixed. Now strategies are evaluated as
+	soon as they are defined,, just define them at the start of the program..
+
+	Various minor patches.
+	
+	2.1.0b1
+	
+	Patch to packages for non linux rpm
+	
+	localhost method calls implemented
+		- todo: multiple methods calls
+	
+	---------------------------------------------------------------------------------
+	KNOWN BUGS : Functions cannot contain both subfunctions and spaces in strings
+	This will not be fixed until the language becomes fixed
+	---------------------------------------------------------------------------------	
+
+	Error in init.c erroneously referred to old directory .cfengine instead of .cfagent for
+	non-root users.
+	
+	Builtin function ReadFile(filename,maxbytes) allows us to read
+	a maximum number of bytes from a file into a variable e.g. 
+
+	control:
+	  mylist = ( ReadFile("/etc/passwd",20) )
+
+	  Split = ( "_" )  # NOTE careful with split character
+	
+	  myvar  = ( ReadFile(/etc/passwd,220) )
+
+	
+	2.0.8 - released this far as a 2.0.x patch
+	
+	Check for illegal characters in classes.
+	Able to bind to a specific IP addressed interface in cfservd.
+        	BindToInterface = ( 10.10.43.6 )
+
+	Security fix to transaction lengths in remote copying.	
+	Suspicious names now applies only to regular files 	
+
+	2.1.a8
+	
+	Imports allowed in update.conf
+	Extra locking applied to methods
+	Parser error in cfservd fixed. Would ignore single character objects (ordering
+	error in lexer).
+
+	2.10a7
+
+       	Methods parsing added
+
+	Granular locking added to all parts of cfengine
+	ifelapsed
+	expireafter added to each action as options e.g. ifelapsed=20
+
+	2.1.0a6
+	
+	Admit /deny did not do variable expansion on pathnames - fixed
+	
+	Reduced stating level during file transfer in cfservd - helps to prevent
+	thrashing when transferring files with server fragmentation.
+	
+	class "windows" is added as a synonym for "nt"
+	xdev=true option to image, tidy, files
+        Timeout added to receive in file copying
+	mounts are only performed in pass 1
+	edit warnings are only carried out during pass 1
+
+	Bug fix for Mode class in file filters - was not matching modes properly
+	Can't copy files less than 17 bytes now supposedly fixed
+
+	Add mutex around syslog() to see if it helps weird file errors.
+	
+2.0.7p3
+        Parser bugfix for group defintions from script (in old compat obsolete syntax)
+
+2.0.7
+
+	Resolv.conf search directive removed from code. This was wrong, in spite
+	of pressure to put it in.
+	
+	EditBackup -> Backup corrected in manual
+	Check for class definitions that are not installable
+	
+	SMTP client handling patch in cfexecd - must wait for reply
+	
+        AppendIfNoLineMatching replaced with regex, not Setline value
+        
+	ChecksumPurge = ( on ) causes cfagent to purge its checksum database of
+	files that no longer exist.
+        
+	Forgotten built in function RandomInt(a,b) - returns a random number in variable
+	assignments. Actually introduced in 2.0.6. Forgot this
+
+	control:
+	
+ 	   rand = ( RandomInt(4,7) )
+
+	Major rewrite of parser
+
+	- code simplifications
+	- Allowed escaping of quotes in strings and newlines e.g.
+
+	var1 = ( "a b c\"substring\" d e" )
+	var2 = ( "a b 
+	c" )
+
+	Tidy code tidied and bug fixed for new scheduler
+
+	Moduledirectory defaults to /var/cfengine/modules
+	
+2.0.6
+	SKIPVERIFY removed from AccessControl checks. This was wrongly allowing
+	access to files if they only had an accepted encryption key.
+
+
+	SetLine added to AppendIfNoLineMatching to allow current line to be added.
+	
+	 ForEachLineIn "/tmp/in"
+            AppendIfNoLineMatching "ThisLine"
+         EndLoop
+
+	Changed /etc/services reference to port 5308 in ipv6 compatible calls.
+
+	Efficiency, removed getpwnam from GetFile(). Was unnecessarily looking
+	up the uid multiple times, which delays copying speed. Copy rates improved
+	by five to ten times!!
+
+        Single copy uses too much cache memory. Optimize by only caching
+	copies that use the singlecopy keyword.
+
+	Message status change: %s is a link which points to %s, but that file doesn't seem to exist
+	Verbose only
+
+        Patches to editfiles to check empty files. DefineinGroup added.
+	
+2.0.5
+
+	Cfrun ipv6 patch
+	
+        Syslog messages name patch
+
+	mountables, binservers variable usage fix
+	
+	backup=timestamp added in copy so that multiple backups can coexist.
+	Other backups use this by default.
+	
+	Cfenvd records loadaverage - and av.db renamed to cf_averages.db since
+	records in av.db no longer compatible.
+	
+	Iteration added to disk paths
+
+	Typo in filters.c UID -> USER meant that Owner field in filters would not always
+	work for processes.
+	Bug in removal of spaces in process-filter matches could cause some criteria
+	to fail to match.
+
+	
+        Netstat changed entry in solaris 2.9
+	Hard class hpux10 -> hpux and the old hpux is deprecated
+
+        tidy //tmp would start tidying / due to error in ExpandWildcardsAndDo. FIxed
+
+	Cfenvd netstat state recorded in separate files now in WORKDIR, by
+	protocol and incoming/outgoing. This allows accurate record of the
+	state to which classes refer.
+
+	excludes and ignores would not appended in a tidy command if 
+	a path already existed in another previous command. Fixed so that all excludes
+	and ignores are concatenated for all related paths.
+
+	Local AF_LOCAL addresses not handled by sockaddr in IPv6 compatible functions.
+	Now returns 127.0.0.1 (why not ::1??)
+
+        Typo in tidy.c prevented tidy old links from working.
+	Documentation patches.
+
+	Checksums no longer performed on dry run (-n) in files, but still in
+	copy.
+
+	No errors written to syslog in dryrun mode.
+	Umask patch in editfiles - umask was not properly installed
+
+	New copy options / variables singlecopy= and autodefine added.
+
+	Alerts added as own section alerts: allow users to define a custom message
+	triggered by a class activation. Alerts can also quote state information
+	from cfenvd and the process table.
+
+	tidy define= does not set class if file could not be tidied.
+
+	debian detect patch (Andy Stribblehill)
+	cfservd descriptor leak (Andy Stribblehill)
+	cfservd daemonize modification
+2.0.4
+
+	cfexecd now reports identical messages only once per day. (Bas)
+
+	***************************************************************************
+	File copying failover=classes sets classes if open server connection fails,
+	or file is unavailable --
+	this allows failover rules to be activated instead.
+	***************************************************************************	
+	***************************************************************************
+	Evaluated classes added:
+	IsDefined(varname)
+	StrCmp(s1,s2)
+	***************************************************************************	
+
+	If a public key authentication succeeds, cfservd now adds a host to the
+	skipverify list, so that we don't waste time checking ID by two separate
+	methods. It has to succeed once though... and the is emptied if the config
+	file changes, and we start over again.
+	
+	elsedef didn't work in processes
+	
+	New test in processes for executability of restart sequence would fail
+	if the sequence had arguments. Fixed.
+
+	---------------------------------------------------------------------------
+	"AUTHENTICATION" BUGS:
+
+	This seems to have been due to threading collisions.
+
+	Malloc is not thread-safe. Added mutex to NewConn in cfservd. This
+	could cause new connections to be mixed up in memory, under heavy
+	load and result in authentication failure on multiprocessor
+	systems.  Also changed pthread_mutex locking around gethostbyname
+	- could cause reverse lookup to fail and create the illusion of a
+	bad public key authentication.
+
+	Implicit mallocs are also in some of the public/private key functions.
+	Moved some of the mutexs to encompass these, and it seems to have
+	fixed the authentication errors.
+
+	Change in mutex locking policy of CheckFileChanges. Don't need a mutex
+	there, just check that ACTIVE_THREADS is 0 and we're single threaded.
+
+	---------------------------------------------------------------------------
+	
+	Tidying directories with atime is meaningless, since the necessary
+	stat'ing automatically invalidates the result except for age=0.
+	Thus all directory time comparisons are now changed to mtime, regardless
+	of the type.
+	
+	Default preview value for shellcommands was true - shuld be false.
+	cfrun - with -T did not accept keys on trust (typo) fixed
+	Classes defined within update.conf are now also private, like a
+	separate module. These go away before cfagent.conf
+	
+	Typo in item-ext.c in regfree of GlobalRreplace led to segmentation
+	fault for some edits.
+	AllowRedefinitionOf = ( variable name list ) allows redefintion of the
+	named variables during parsing.
+	
+	Editfiles scheduling error for classes not immediately defined, fixed.
+	
+	Inform=false didn't affect purge=true
+	Setting chmod 000 on a directory could prevent 2.0.3 from fixing it.
+	Fix for hyphen fix - can have numbers and hyphens in hostnames...
+        Fix for freebsd fix...ugh
+	IP address range minor fix >= -> > in lower range
+
+        $ cfagent --avoid resolve,copy
+	$ cfagent --just tidy --just shellcommands
+
+	The latter does tidy and shellcommands, but nothing else in the
+	action sequence.
+	
+	
+2.0.3
+	import in cfservd.conf was blocked.  update.conf run when doing -a
+	or -z DESTINATION used in link.c (legacy) without allocation -
+	caused segfault.  IMPORT in cfservd was excluded -b for
+	--update-only was used up, changed to -B (too many options!)
+
+	hyphen in cfservd.conf admit/deny hostname was misinterpreted as IP range in 2.0.2
+	Fixed
+
+	Interface detection on FreeBSD messed up. Fixed.
+	Unknown edit command error in include/exclude.
+
+	SECURITY : Recursive descent functions vulernable to race
+	conditions. Directories could be replaced by symbolic links and
+	this would affect any operation that relies on directory parsing;
+	files, tidy, editfiles (copy is non-destructive). Recursive
+	descent functions are reworked to check inode numbers and device
+	numbers in order to detect attacks. This leads to a small inefficiency
+	in recursive descent. The solution is to chdir to the actual directory
+	concerned, check that it is the same one we stat'ed and scan only those
+	relative names afterwards, so we freeze each directory one at a
+	time.  The problem only applies to systems who have non-trusted
+	users.
+
+	Editfiles error messages added for class definitions within conditionals.
+	Some segmentation faults corrected.
+
+	Check added to prevent cfagent from following links it does not own.
+	
+	Work around to delete cfparse.c from the distribution cause autoconf won't do it.
+	This was causing incorrect alloca() usage for HPUX and AIX.
+
+	
+2.0.2
+	New option -b --update-only (changed in 2.0.3 to -B)
+        Runs only the update.conf script
+	
+        Host ranges in IP addresses 128.39.89.10-34 or CIDR notation 129.39.89.1/24
+	to specify groups / classes or host lists in cfservd.conf.
+        groups:
+
+	   myseries = ( IpRange(128.39.74-75.10-20) )
+	   myseries = ( IpRange(128.39.74.10/24) )
+	
+	128.39.74.10/23 == 128.39.75.56	
+	128.39.74-75.10-20 == 128.39.75.12
+	2001:700:700:3:290:27ff:fea2:4730-4790 == 2001:700:700:3:290:27ff:fea2:477b
+	2001:700:700:3:290:27ff:fea2:4730/64 == 2001:700:700:3:290:27ff:fea2:477b
+
+	New list in cfservd.conf, DynamicAddresses = ( ipranges )
+	this assumes that hosts get IP addresses from DHCP or someting
+	and can change over time. This changes the security model somewhat.
+	(see reference manual)
+
+	Bug in cfservd for files which were unreadably by the daemon.
+	Could lead to incorrect file being transmitted instead of rejection.
+	
+        Changes to mount list. Can now include mount options in the
+	cfengine mount model (see reference manual) 
+	Bug in classification of variable assignment and authorization
+	assignments fixed.
+        Structures for convergence analysis added. Option -g (future work)
+	NAT handling in cfservd.c patch
+	Signal names were wrong in some cases due to differing conventions - OS dependent.
+	Incorrect code in file time filter comparisons fixed.
+
+	License ammendment in COPYING makes it clear that users are encouraged to
+	use the OpenSSL library. I see no problems with this.
+
+	Purge exclusions segfault bug fix.
+	Purge should not purge patterns in include= (fixed)
+	Purge symbolic link error fixed. (Bas)
+
+	/* Bas
+	The following patch helps with the, for me at least, irritating
+	problem where I have a cf.<conf> file which has sections depending
+	upon classes which do file checks or copy based upon a user/group
+	which doesn't exist on certain machines :-
+
+        flagisoff::
+           file owner=user group=group
+
+	cfengine complains about this even though flagisoff is off :-)
+
+	It also means that a user can be created earlier in a configuration
+	and used later on without the warnings.
+	Anyway patch does :-
+	- don't complain about missing uid/gid while parsing
+	- set uid/gid to -2 if missing and copy the name to the uid/gid
+	  structure
+	- when actually doing things, recheck to see if the user exists use it
+	  if its now found, otherwise complain
+	*/
+
+	SMTP \r added to cfexecd, caused problems for stricter mailers.
+	(I wasn't reading RFC2822!!)
+
+	Connection from version 1 client could cause version 2 server to segfault.
+	Fixed uninitialized field.
+
+	If we specify purge, then the following options will also be set
+	and cannot be altered: forcedirs=true typecheck=false - for safety sake.
+
+        Some windows patches.
+	
+2.0.1
+        Some error messages demoted to verbose only
+        Some documentation corrections
+        cfenvd given a -H option for histogram measurement. (research)
+        More problems with configure finding libraries fixed
+        Extra time classes Q1,Q2,Q3,Q4 are set in each quarter of the hour.
+	Also abbreviations of HrXX.Q1 ca write Hr12_Q1, for instance.
+        VSYSTEMHARDCLASS was not defined in cfservd
+	tidy .cfengine files could have permission 777. Missing permission added.
+	openbsd bind() fix in cfservd - openbsd does not map ipv4 addresses in ipv6!!!
+        error in assigning hardclass for openbsd (typo) and this affected several other operating systems. Fixed
+	
+2.0.0
+	Hpux config changes
+	Red Hat compilation issues with Berekely DB
+	cfservd.conf did not re-read input file properly if -f was used.
+	mode checks patch (Martin Jost)
+	GNU autoconf classes renamed to compiled_on_solaris2.7
+
+Cfengine 2.0 ----------------------------------------------------------------
+
+b4
+        configure changes to compile on systems without pthread.
+        Increase thread stacksize to avoid seg fault on some systems, which
+        set a small basic pthread stack.
+	parser checks update.conf on -p
+	bug in reading imported files if CFINPUTS set to non-abolsute path
+	
+b3
+	Some typos and solaris memory error fixed, in cfpopen().
+	Add optional argument to disable to warn only about existing files.
+	Modules no longer time-locked
+	
+b2
+	IPv6 implementation 
+	Bug fix in access lists of cfservd
+	
+a23     
+	Added support for variable and class built-in functions.
+
+a21
+	Martin Andrews' NT/Windows patches incorporated.
+
+a20
+	Code tidying
+
+a19
+	cfrun fixed for RSA usage, and 
+	AllowUsers = ( )  added to cfservd.conf
+	Bas' NAT fixes to cfrun included
+	BeginGroupIfDefined in editfiles incorporated
+
+a18
+	Symmetric key encryption rewritten, using Blowfish and RSA key exchange
+        Several efficiency modifications have been added, and this change allows
+	for future multiple enryption schemes.
+	
+	install.c rationalized, to standardize true/false switches
+
+	Standardedized true/false api in switches with HandleCharSwitch.
+	Internal representation is now 'y'/'n' not t/f and y/n.
+
+	verify= added to file transfers allowing cfengine to compute an
+	MD5 verification of the transmitted data before installling.
+
+	secure= -> (encrypt=,type=) split up, so encryption can be used
+	independentently of the update method.
+	
+a17
+	RSA authentication added
+	cfkey changed to generate public/private keys
+
+a16:
+	Cfagent will now attempt to rename non-directories which
+	are "in the way" during copying, if forcedirs=true
+	The function MakeDirectoriesFor thus has a new argument
+	for whether this should be forced or not. THe policy regarding
+	other uses of the function has changed:
+
+	 - For creation of essential cfengine directories, it is compulsory
+	 - For other optional actions dirs a re not forced
+
+         exclude= and ignore= now allowed in tidy
+	 include= is a synonym for pattern=
+
+	Replace old checksum functions with OpenSSL interfaces. Larger
+	checksum database, due to longer hashes. Can now have checksum=sha1
+	in files.
+
+        Checksum databases will be rewritten in a new format, as the datasize has changed.
+        Might result in checksum changed warnings when installing new version.
+	
+	Editfiles scheduling bug, with new scheduler, fixed. Classes
+	specified in the action sequence would not be executed.
+
+	Exclamation = ( off ) - to switch of exclamations in alerts
+
+	% included in filename spec
+	
+a14/15:
+	Compilation issues. Restructuring and fiddling with cfenvd.
+	
+a13:
+
+	control option EmptyResolvConf = ( true ) removes old nameserver entries.
+
+	Bug fix in file copying. A missing test could cause problems when cfservd
+	was remote copied by itself, if error strings were aligned on page boundaries.
+
+	Typo in popen.c fixed. Shouldn't have any effect on code.
+
+	Hosts with multiple interfaces now register all subnets as classes.
+
+	Now adds ipv4 address groups in the form ipv4_128_39_89
+	                                         ip43_128_39
+	                                         ipv4_128
+
+	Owner filter added to process filters (oversight)
+a12:
+
+	Editfiles filters implemented
+	
+	cfengine.conf -> cfagent.conf
+	WORKDIR = LOGDIR = LOCKDIR = /var/cfengine (like /var/mail)
+
+	/var/cfengine/bin     - default local binary
+	             /inputs  - default inputs dir
+	             /outputs - record of old runs
+	
+	 cfexecd a replacement scheduler. Used as cfexecd -F (no fork)
+	it can be placed in cron to replace "cfwrap cfengine". It needs
+	you to define smtphost = ( smtpmailer ) in cfagent.conf.
+	This program stores the output of cfagent in the outputs directory
+	and then mails a copy if smtphost or sysadm are defined.
+	It truncates long mail.
+
+	Cfengine could be used to pick up the output files for collation by a central
+	monitor, if desired.
+
+	Cfengine now looks for a config file called /var/cfengine/inputs/cf.update which
+	is run before the main configuration. This is intended to be used
+	to get an updated configuration, so that it can be parsed
+	immediately afterwards. If there is an error in cfagent.conf, 
+	cf.update will still be able to run. 
+
+	Don't forget to move the keys file to /var/cfengine
+	
+	a11:
+	  resolver uses search directive, deprecating "domain" once and for all.
+	  This might hit really old systems...?
+          Using shellcommands to set classes noe suppresses output from command.
+	
+        a8: 
+
+        snprintf for added security or just for certainty, where appropriate.
+	
+	If CFINPUTS is not defined, cfengine will look in CONFIGDIR
+	for input. Files are always checked for their security by checking
+	the owner and permissions.
+
+            --with-lockdir=LOCKDIR  deprecated
+	    --with-CFINPUTS=CONFIGDIR  - default CFINPUTS internal (/etc/cfengine/inputs)
+
+	Extensive changes to locking policy.
+
+	LockDirectory = ()
+	LogDirectory = ()  --- are no longer configurable from cfengine.conf
+	                       due to required compatibilty with cfenvd.c
+
+	cfenvd added. Records long term data and transfers class information
+	to cfengine aboutthe average state of the system.  Classes pin-<number>
+	also defined for every open service-port on the host.
+	
+        a6: undefined_domain is now removed from the class list when
+	a proper doman is defined. This allows us to test for this
+	as a class for debugging.
+	
+	recurse option in home tidy now allowed.
+
+	Option LogTidyHomeFiles to switch off generation of
+	log files in user homedirs.
+	
+	Bug in DeleteToLineMatching, mismatch with documentation
+	functionality. Fixed.
+
+	Process options changes from ax to auxw for BSD-like ps.
+	
+	cfenvd introduced
+
+	Some FreeBSD patches.
+	
+	Locking changed to use Berkeley DB if available
+
+	Default workdir changed to /var/cfengine from /var/run
+	since /var/run gets emplied on reboot in linux.
+	
+Cfengine 2.0 -alphas---------------------------------------------------
+	
+	* Expansion of $(dollar) broken in 1.6.0 - fixed
+	
+	* Locking problem in cfd fixed. Problem causing access
+	denied while re-reading config files. MAXTRIES increased
+	for high volume services, was causing premature apoptosis.
+
+	dest= could not refer to a filename with spaces, fixed.
+	
+	* Made recipient variables in client.c long instead of
+	size_t in rstat, for 64 bits. With %ld in scanf.
+	
+	* Cfengine 1.6.0-1.6.3 introduces filters into processes
+	and files. 
+
+	* 1.6.3 change from Berkeley DB2 to DB3 - not backward compatible!!!
+	  Update Berkeley db with
+	     cd build_unix
+	     ../dist/configure
+	     make; make install
+	     ln -s /usr/local/BerkeleyDB.3.2 /usr/local/BerkeleyDB
+
+2000-06-13  David Masterson  <David.Masterson@kla-tencor.com>
+
+	* 1.6.0.a2: re-released to Mark after stupid mistakes.
+
+	* src/Makefile.am (noinst_HEADERS): add cfparse.h
+
+	* Makefile.am (EXTRA_DIST): add acconfig.h
+
+2000-06-12  David Masterson <David.Masterson@kla-tencor.com>
+
+	* 1.6.0.a2: released to Mark
+	
+	* General: Attempted to convert to reincorporate all my Automake
+	stuff into the release.
+	
+2000-06-12  Mark Burgess <Mark.Burgess@hio.no>
+
+	* 1.6.0-alpha1: released
+	
+	* General: Rewrite of DCE code by Transarc/IBM.  Add elsedefine=
+	tag as complement to define=.  CompressCommand action=compress in
+	files, tidy, compress=true for compressing files on the fly.  Bug
+	in copy with size= fixed.  Was ignored if file didn't exist.
+	Modules: in addition to setting classes, can return lines
+	=ENVVAR=value which sets cfengine environment variables.  This
+	allows modules to set variables which can be inherited directly by
+	scripts.
+
+2000-05-11  David Masterson  <David.Masterson@kla-tencor.com>
+
+	* contrib/Makefile.am (pkgdata_SCRIPTS): change cfemacs.el to
+	cfengine.el in keeping with internal documentation.  Also renamed
+	the file as well.
+
+2000-05-08  David Masterson  <David.Masterson@kla-tencor.com>
+
+	* Release: V1.6 released to Mark for verification.
+
+	* Everything:  Many things have been changed and reorganized for
+	the shift to automake generated Makefiles.  See the end of the
+	NEWS file for more information.
+
+2000-04-24  David Masterson  <David.Masterson@kla-tencor.com>
+
+	* ChangeLog: Created and initialized with old VERSION.DIFF
+
+
+***************** Minor Version 5 ******************** 
+
+KNOWN BUGS: linux, when making directories, ownership can perms can be wrong.
+
+
+1.5.4
+  Added security message in checksum=md5 for cfengine if new files appear
+  Bug in class evaluation with multiple embedded groups fixed
+  Bug in file transfer could hang a server in special circumstances.
+  Bug in secure recursive copy (access denied incorrectly).
+
+  Type change, size is off_t in cfstat struct
+
+  Multiple define bug in copy: could cause endless loop
+  Thread counting error fixed in cfd
+  Required/disk suspicious warnings now cause classes to be defined
+  Resolver could delete substring lines
+
+  Extra measures against Denial of Service attacks on cfd, only one
+  instance of a host-IP may be connected at one time.
+
+  1) Multiple connections from the same host are refused by default
+     (before any recv())
+  2) A DenyConnectionsFrom list will prevent named IP adresses from connecting
+     (before any recv) or a general AllowConnectionsFrom mask...
+  3) If the thread table is full for more than five requests, cfd commits
+     suicide (apoptosis) to avoid resource usage by spamming.
+
+  The control variable "DenyConnectionsFrom = ( ip1 ip2 ... )" allows a list
+  of numerical IP masks to be specified, which cfd will deny connections from.
+  This can be used to prevent hanging connection attacks from malicous hosts
+  and other Denial of Service attacks.
+
+   e.g. cfd.conf   
+
+     control:
+
+      AllowConnectionsFrom ( 128.39.89 )
+      DenyConnectionsFrom = ( 128.39.89.4 )
+
+  This is in addition to tcp wrapper stuff, but the TCP wrapper code cannot
+  protect against denial of service attacks.
+  typecheck=false in copy switches off error messages on type mismatch.
+
+1.5.3
+  Configuration fixes for strange platforms. 
+  Segmentation fault with long hostnames in cfd.
+  A number of security minded improvements to coding.
+
+1.5.2 (Minor patches)
+  DeleteNonOwnerMail excluded check of NonUserMail
+  Almost complete port to SCO, missing data on mount model
+  Some compilation problems addressed. Move to OpenSSL
+  latest version.
+  Domain name issue fix in remote copying between domains.
+  Exec strings in variable assignments are now chopped.
+
+1.5.1 (bugfixes only)
+  Segmentation fault with blank lines fixed in editfiles.
+  Segmentation fault with remote copy access denied fixed.
+
+  IP address and subnet (first three bytes of IP) are now
+  added as classes e.g. 128_39_89 and 128_39_89_10
+
+  Checksum update bug fix
+
+  ->! works on directories, with some care checks
+
+  mutex variables in cfd made static. Serialized gethostbyname()
+  to avoid races in multithreaded lookup.
+
+ BUG: cfd seems unable to copy itself on memory mapped solaris
+
+1.5.0
+  Security enhancements and bug fixes.
+
+  !! GNU Regular expression library replaced by POSIX calls.        !!
+  !! The old code is still present for legacy systems but           !!
+  !! this will not be supported in the future. Legacy systems       !!
+  !! should install the GNU Posix library rx-1.5 for compatibility. !!
+  !!       *** check complex regex's before using this! ***         !! 
+
+   RFC931 user authentication for cfd, on systems 
+          supporting/running identd.
+
+   Editfiles: Checks that the file differs
+              from the disk version after multiple edits
+              before saving (fixes circular do-undo problems)
+
+   All pthread libraries are now trusted to work by default
+   (make of this what you will).
+
+   BSD chflags attributes now handled (by Andreas KluBmann)
+
+   home/ in directories
+
+   LogDirectory
+   LockDirectory - variables in control: can override defaults.
+
+   define= added to shellcommands. Defined if shellcommand
+   returns zero.
+
+   Cfengine will not edit a link to a file unless the
+   owner of the link is the owner of the file.
+
+   Careful attempts to avoid exploitation of race conditions
+   during file writing.
+
+   New copy option, secure=true allows 3DES encryption with
+   secret keys in file LOCKDIR/keys. Filenames and contents
+   are encrypted only.
+
+   New threading policy makes compatibility with earlier versions
+   of cfd impossible. Should be more effective now. Discontinued
+   -m flag.
+
+   cfd options: root=host1,host2 determines whether a connecting host
+                can read files on the remote system which are not
+                owned by the initiator of the connection.
+
+                secure=true means that cfd will only serve the file
+                on a secure line.
+
+   New cfkey program which generates a key file, e.g.
+    cfkey > /var/run/cfengine/keys; chmod 600 /var/run/cfengine/keys
+
+   New copy type "mtime"
+
+   Control variable: DefaultCopyType = ( mtime ) can be used to set on all
+                     copies following this.
+
+   Problem with pthreads and GNU/Linux fixed
+
+ ***************** Minor Version 4 ******************** 
+
+1.4.17
+   Multihomed host fixes for hosts with multiple names on
+   interfaces.
+1.4.16
+   Options owner= group= in shellcommands, allow running
+   programs with effective user id, i.e. su -c user command
+
+   ShowActions = ( on ) makes cfengine print out the exact action
+   in output, using the adaptive lock string. For specialized
+   processing only.
+
+   Symbolic link attack security hole closed.
+
+1.4.15
+   Bug in size= in tidy files which could cause parsed value to
+   be incorrect if the size value had many digits.
+   Setuid logs were not saved after copy:
+   stealth on remote copies was broken.
+   Username authentication added (weak and discretionary).
+   Bug with new Berkeley database v2 fixed. Seems to work now.
+   New class name digital added causing incorrect class id's!
+
+   Option checksum=md5 added to files to give Tripwire functionality.
+   (Requires libdb v2 from sleepycat)
+
+1.4.14a
+   Editfiles Replace/With error incorrectly fixed in 1.4.13.
+   Caused segmentation fault if last line of file.
+
+1.4.14 (Post LISA changes)
+   SuspiciousNames = ( .mo lrk3 ) in control adds a list of filenames which
+   cfengine will warn about if it detects them in the course of scanning
+   directories.
+
+   SecureInput = ( false/true ) option which switches on checking of the
+   permissions on the input files. If this is set cfengine will not
+   read files which are not owned by the uid running the program, or
+   which are writable by groups or others.
+
+   Copy default to source=destination name if dest not specified (assumes
+   that server is not localhost)
+
+1.4.13
+   N.B. When upgrading to this version. ALL systems should be upgraded.
+
+   Debian ID changed to use /etc/debian_version.
+   Special GNU/linux distributions detected incorrectly.
+
+   cfd patches: removed forking from 1.4.12 and fixed error protocol bug which
+                allowed files to be overwritten with an error message (ouch!)
+                Multi-homed host fix which works with solaris nsswitch/nis
+
+   When copying symbolic links, both image and link, the file pointed to
+   by the link could end up with the permissions of the link. Fixed.
+
+   File recursion was broken in some earlier version.
+   Process match/define fix. Classes got defined even when processes missing.
+
+   In file,copy,link new option ignore= allows locally defined ignores. Often
+   a better alternative to the global ignore list which affects all three and
+   tidy as well. (This is like include/exclude but also works on directories/recursion)
+
+   AutoCreate/dry-run created file. Fixed.
+
+   Variable expansion in import.
+   Imported files which are not found now give only warning in verbose
+   mode. They do not stop execution. This allows inclusion of
+   possibly existing files like cf.local
+
+   Obscure bug in class evaluation fixed.
+
+   OpenBSD classes added.
+
+   Purging without authentication disabled, otherwise possible to
+   wipe out a whole directory.
+
+   Link defaults changed during copying so that links will be created
+   to nonexistent files.
+
+   Didn't find some processes if username contained a number on sys V.
+
+   Bug in macro hashing could cause segmentation fault.
+
+   When recursively copying dirctories with non-alphanumeric filenames
+   it was possible to enter into enter into silly loops which looked
+   for non-existent files. Fixed.
+
+   Variables allowed in defaultroute.
+
+   control: variable = ( `exec shellcommand` ) now sets variable to output
+   of command.
+
+   New options for unmount deletefstab=true/false deletedir=true/false
+
+   New option stealth=true/false determines whether the access/ctime of
+   source files are modified during copy.
+
+   Security feature tests ownership and permissions of input files.
+   Files writable by others than the owner are skipped. If cfengine.conf
+   is not secure program terminates.
+
+   New List in control FileExtensions = ( c gif txt ) etc
+   If directories have these names they will be reported as
+   security warnings.
+
+   NonAlphaNumFiles = ( on ) switches on disabling (marking) of
+   files with control character filenames and other non-alphanumeric
+   names, with some exceptions. These are suffixed with .cf-nonalpha
+   which can then be removed if desired by tidy.
+
+1.4.12
+   Ownership of links was not checked, fixed for those systems which have
+   lchown() (solaris and osf/digital)
+
+   Automatic domain name detection in cases where sites use fully qualified
+   domain names locally (eg in /etc/hosts) Helps to solve the problem of
+   what to do if you havge multiple domains in a cfengine.conf file
+   and want to define classes based on the domain name which hasn'r been
+   set yet.
+
+   processes: include and exclude lists can be added to match or exclude specific
+   literals in addition to the regular expressions (which don't seem to
+   work very reliably) when searching through the process table.
+
+   Tidy with single / as root ignored command. Fixed
+
+   miscmounts rw/ro only option made more like other options with mode=rw,mode=ro etc.
+   Default value is rw. Backward compatibility maintained.
+
+   Variable expansion now performed in owner= and group=
+
+   Error capture while checking link permissions fixed. Old perror() method missed.
+
+   Multithreaded cfd. stat error message fixed.
+   -m option to cfd to switch on multithreaded operation.
+   Systems which do not have working pthreads fork() processes
+   during copy commands only. Note that solaris 2.[56] is the only working
+   pthread implementation that is implemented, since I only have linux
+   and solaris to test on. To get pthreads working on other platforms
+   you have to add a NOTBROKEN to configure.in and rerun autoconf/autoheader.
+
+   cfd now is able to run cfengine at timely intervals in collaboration with,
+   or instead of cron. This allows cron to be restarted by cfengine/cfd on linux boxes, where
+   it crashes all the time, and it allows cfd to be restarted by cfengine/cron
+   if it crashes (occasionally). See AutoExecInterval/AutoExecCommand
+
+   Purging files didn't remove deep directories on client, fixed.
+
+   Domain name case control tweaks.
+
+   File recursion bug fix.
+   Bug in execute bit permissions on directories.
+
+   Support for multiple network interfaces
+
+   Copy could lead to empty file.
+
+   New db v2* api used.
+
+   dirlinks=tidy didn't work, fixed.
+   Bug in home expansion of user patterns
+
+   Multiple timezone aliases
+
+1.4.11
+   Copy repatched. Erroneous patch in filedir.c copy modes not settable
+   Lexer tweaking
+   Travlinks patch in tidyfiles. Did not detect links properly.
+   Home tidy optimization.
+   Bug in IsMountedFileSystem fixed
+   Bug in relative linking from / , missing / fixed.
+   Link update in copy files repaired.
+   Editfiles:  Backup, Syslog, Inform
+   New class additions are automatically canonified to protect from plugins.
+
+   Can now set syslog=on/off, inform=on/off per action so that output can be
+   routed as desired, overriding global settings. (For Greg Maples)
+
+   processes, useshell=dumb ignores I/O and allows programs like cron to
+   be restarted without hanging cfengine with a zombie. This doesn't
+   work via cfrun, unfortunately...
+
+   Bug in parser, defaults not reset if previous action was not installed.
+   Global replace bug fixed.
+   internal variable $(ipaddress) contains numerical form of IP for current host.
+   addinstallable for declaring dynamical classes before they are used.
+   Memory leak in cfd fixed.
+
+1.4.10
+   Multi-homed host fix for cfd.
+   Mail check extras: test for dubious files 
+    Warn/DeleteNonOwnerMail
+    Warn/DeleteNonUserMail
+   Edit: CatchAbort markers introduced to add a kind of exception handling
+         so searches do not have to abort an edit compeltely.
+   Some typos fixed in the logging code. Segmentation faults caught 
+   and erronenous messages fixed.
+   Extra new lines from logging code fixed, e.g. with cfengine -a
+   Bug fix to edit command DeleteLinesAfter...
+   TimeOut parameter added to adjust network timeouts on slow networks.
+   Access control in cfrun  (access = mark,uid,uid2 in cfrun.hosts)
+   matches=0 allowed in processes
+   Unixware support added
+   8-bit clean for flex users
+   percentages added for filessystem checking (diskusage=)
+   extra options for rmdirs so top directory needn't be removed in tidy
+
+
+1.4.9
+   ReleaseCurrentLock exited if remove failed. This was wrong,
+   should only have returned and caused a truncation of the 
+   action sequence.
+
+   ERESTARTSYS deadlock patch for POSIX.1/SVR4 while restarting
+   daemons. Processes would hang, never receiving end-of-file on
+   the pipe. A timeout has been added as a workaround.
+
+   Support for Access Control Lists in files and copy. Currently
+   implemented for solaris, and dfs only.
+
+   blocksize calculations rewritten to avoid division by zero error.
+
+   Error in installing required class info. Introduced in 1.4.8
+
+   define= directives added to process, editfiles, files, tidy, link and disable
+
+   DNS lookup case control to avoid unusual problems with case mismatch.
+
+   $(host) not expanded when domain not set: fixed.
+
+   Output rationalization in different modes, including possibility of logging.
+   Note that the status of some messages has changed. You might need
+   to set Inform = ( on ) in order to see the messages you want to see.
+   Messages may now be routed to syslog.
+
+   Bug in server= fixed for net copy. Previously a pointer error
+
+   New option to shellcomand: useshell=true/false. If false, cfengine
+   uses an internal popen replacement which does not use an intermediary
+   shell to start programs. This addresses several security issues in
+   starting programs with root privileges.
+
+   New option to copy: purge=true/false. If true, cfengine will remove
+   files in the destination dir which do not exist in the source dir
+   when recursively copying directories.
+
+   control options Verbose = ( on ), Inform = ( on ), Syslog = ( on )
+   which switches the output level from within the config file. Also:
+   Warnings = ( on ), DryRun = ( on ) to set other command line options.
+
+   Bug in relative linking fixed.
+
+   Bug in overlaying permissions mostly fixed in copy. Still some
+   residual weirdness when using complex masks.
+
+   Garbage appeared in copy define=classes. 
+
+   AutoCreate would not work with BeginIfFileNewer
+
+1.4.8
+   Cfengine now detects redhat linux and defines a class. Welcome redhat.
+
+   Variables can now be used in the control section itself, to define other
+   variables and so forth.
+
+   Drop setpgrp and use setsid instead, if it is found, to get around the
+   incompatible argument.
+
+   Non canonical $(arch) canonified so that it is not confused as a list variable.
+
+   OutputPrefix doesn't automatically append hostname now, since you can always
+   do this yourself with variables in the OutputPrefix string.
+
+   Bug in copy, permissions finally fixed? Pleeeaasse?
+   Output format changes.
+
+   New option to links, nofile=force allows you to create links to files
+   which do not presntly exist.
+
+1.4.7
+   Copy : "return" instead of "continue" in GetLock. Meant that if one
+   lock failed, all copies were abandoned.
+   Setuid root files copied without setuid bit. Fixed.
+   Segmentation fault in "InsertFile" Fixed for empty files.
+
+   Scanf workaround for linux in remote copying, caused incorrect
+   values to be read and thereby incorrect file modes.
+
+   Problem in variable expansion fixed?
+   setpgrp() in cfd
+   Documentation updates.
+   Possible segmentation fault in inode caching fixed.
+   Minor suggestions to autoconf implemented.
+
+1.4.6
+   CompressPath moved to filename.c to avoid linking problem in OSF.
+   More Too Many open files bloopers fixed.
+   cfd: transfer synchronization problem could break filenames in readdir() fixed.
+   Recursive tidy including directories fixed so that top directory is now
+   deleted.
+
+   cfwrap altered so that identical multiple messages are filtered, or shown only
+   once per day
+
+1.4.5
+   Symbolic link inode number transferred incorrectly from cfd, leads to remaking
+   symbolic links during remote copies, owing to confusion of hard and soft links.
+   Some unclosed socket loopholes fixed. Too many open files error.
+   Variable syntax error, misdiagnozed if other braces used. Fixed.
+
+1.4.4
+   Repository error, files not being properly backed up. Fixed.
+   Documentation config changes.
+
+1.4.3
+   AIX4 -> AIX in df.c. Typo in freespace code.
+   Incorrect locking of editfiles fixed. Unique names previously omitted.
+   Editfilesize can be set to zero to be ignored.
+   Class defines in required: bugfix, items not installed.
+   BeginGroupIfFileExists checked the wrong file!!
+   cdrom filesystems do not generate warnings if not immediately mountable
+   html files no longer distributed
+
+   Binaries are now installed in sbin instead of bin.
+   scripts are now installed in lib/cfengine instead of sbin
+
+1.4.2
+   Timeout for reading input files (can happen during hanging NFS) could lead to
+   multiple cfengines being started unwillfully.
+   Emacs major-mode contributed by Rolf Ebert
+   include/exclude patterns in files fixed (broken in 1.4.0)
+   Broken pipe error in cfrun fixed.
+   Variable OutputPrefix can be used to change the default "cfengine:"
+   prefix on output lines.
+
+
+1.4.1
+   Bug in parser. Trailing slashes defeat 2Dlist expansion. Fixed for tidy.
+   cfd rereads system clock.
+   Copy permission bug fixed.
+   File reorganization to reflect inheritance structure.
+   Change in cosmetic details of locking implementation.
+   Some manual inconsistencies fixed.
+   Bug in cfrun parsing comments fixed. (Missed next line)
+   Bug in editfiles increment pointer fixed. Decrement to before start of file
+   is not longer a fatal error.
+   Permissions on rotated files were not preserved in 1.4.0. Fixed.
+   Trailing dots from DNS/gethostbyname are now truncated away
+   Editing symbolic links, edits file instead.
+   Default value of IfElapsed is now zero, so that antispam locks are turned
+    off by default.
+
+1.4.0
+   Debian systems now detected and have an additional class "debian" in addition to linux
+
+   New option "define=class1,class2" to "copy" command defines a list
+   of classes only if a file is copied.
+   This allows followup actions to be added to other sections.
+
+   Variable list iteration in shell-commands.   Enhanced iteration source code.
+
+   New option in disable: size=, size=>, size=<  for byte size comparisons. Files are
+   only disabled if the criterion is met.
+
+   Hourly classes are added to the automatic class engine: Hr00 to Hr23 can now be used.
+
+   Update messages in copy were erroneous in some cases, although copying was performed
+   correctly. Fixed.
+
+   Hyphens in hp-ux etc hard classes changed to underscores.
+
+   It is now possible to override the name of the network interface in the control
+   section of the program. This allows funny OS installations on unusual hardware
+   to set the net interface for a specific class.
+    control:
+
+     nextstep::
+
+      interfacename = ( blah0 )
+
+  New editing commands:
+
+     CommentLinesContaining,
+     BeginGroupIfFileIsNewer,
+     BeginGroupIfFileExists,
+     BeginGroupIfNoLineContaining,
+     AutoCreate
+
+
+   Bug in alpha/netbsd with segmentation fault in exit() repaired, 
+   some kind of pointer misunderstanding with a null string.
+
+   New safer algorithm for copying files, first copies a modified
+   file to a new file on the local filesystem. When transfer is complete it is
+   renamed into place. This helps avoid race-conditions and problems
+   where copying is halted underway due to network lossage.
+
+   New debugging option d3 provides summarial info.
+
+   Timeout option in shellcommands allows timeouts after a fixed number
+   of seconds.
+
+   Timeouts in place for all RPC operations connected with "mount".
+
+   Sizes in disable and tidy now may specify units, bytes, kilobytes, megabytes (b,k,m)
+   First character significant only. e.g. size=30kilobytes is okay.
+
+   include=, exclude= patterns in file searches
+
+   Remote copying partially implemented with server daemon cfd.
+
+   Typo in tidy concatenation with multiple wildcards fixed.
+
+   Extra time classes added allowing a complete front end for cron. Additional
+   manual chapter on this.
+
+   copying of links without a directory reference now prepends "./"
+
+   Copying now preserves hard links where possible.
+
+   File Rotation in disable does not break file handles any more.
+
+   Copied/disabled files now back up to .cfsaved whereas edited files
+   back up to .cfedited, to avoid overwriting the backup in copy-then-edit
+   scenarios.
+
+   Checksum comparisons are now optimized by checking the number of
+   bytes before launching into a checksum computation.
+
+   Several new edit commands.
+
+   New locking mechanism with atomic locks which allow several cfengine's
+   to coexist. Also antispamming mechanisms built in.
+
+   CheckResolv reworked to avoid editing each time.
+
+   AddToFstab will add to file if fs mounted
+
+   SplayTimes added. causes cfengine to sleep a unique amount
+   of time for each host, up to a maximum time. Can be used to
+   avoid race conditions and contention.
+
+   Improved expression evaluation with parentheses.
+
+   Support for Cray. (Unsure whether these choices will match
+   all cray systems).
+
+  beta2:
+
+   New options -q -K for switching off locks
